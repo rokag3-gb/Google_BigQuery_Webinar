@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWasmApp3", "BlazorWasmApp3\BlazorWasmApp3.csproj", "{85C07904-33B0-4D53-B91C-17875DD3247A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWasmApp3", "BlazorWasmApp3\BlazorWasmApp3.csproj", "{85C07904-33B0-4D53-B91C-17875DD3247A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormApp1", "FormApp1\FormApp1.csproj", "{1CFC3856-A3FD-454F-9EF8-3BE22E794319}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{85C07904-33B0-4D53-B91C-17875DD3247A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{85C07904-33B0-4D53-B91C-17875DD3247A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{85C07904-33B0-4D53-B91C-17875DD3247A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CFC3856-A3FD-454F-9EF8-3BE22E794319}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CFC3856-A3FD-454F-9EF8-3BE22E794319}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CFC3856-A3FD-454F-9EF8-3BE22E794319}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CFC3856-A3FD-454F-9EF8-3BE22E794319}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
