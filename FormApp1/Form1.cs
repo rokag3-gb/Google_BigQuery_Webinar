@@ -1,4 +1,3 @@
-using Google.Apis.Auth.OAuth2;
 using Google.Cloud.BigQuery.V2;
 using System.Reflection;
 
