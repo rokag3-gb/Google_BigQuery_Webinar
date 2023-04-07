@@ -28,16 +28,20 @@ namespace BlazorWasmApp3.Controller
             ""client_x509_cert_url"": ""https://www.googleapis.com/robot/v1/metadata/x509/svc-acc-sd-team-bigquery%40cloudmate-sdteam.iam.gserviceaccount.com""
             }");
 
-        string query = @"select
-                        col1
-                        , colString
-                        , DATETIME(CURRENT_TIMESTAMP(), 'Asia/Seoul') as datetime_KST
-                        , DATETIME(CURRENT_TIMESTAMP(), 'America/Los_Angeles') AS datetime_LA
-                        , generate_uuid() as UUID
-                        , 'asd' as VAL1
-                    from `ds01.tb1`;";
+        string query = @"
+                select	col1
+	                , colString
+	                , CURRENT_TIMESTAMP() as TIMESTAMP
+	                , DATETIME(CURRENT_TIMESTAMP(), 'Asia/Seoul') as datetime_KST
+	                , DATETIME(CURRENT_TIMESTAMP(), 'America/Los_Angeles') AS datetime_LA
+	                , DATE(2023, 4, 4) AS date_ymd
+	                , DATETIME(DATETIME '2023-04-04 23:59:59') AS date_dt
+	                , generate_uuid() as UUID
+	                , 'asd' as VAL1
+                from	`ds01.tb1`;
+                ";
 
-        public BigQueryResults? Select()
+        public BigQueryResults? Select_tb1TestData()
         {
             BigQueryResults result;
 

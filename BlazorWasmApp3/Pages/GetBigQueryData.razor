@@ -1,13 +1,13 @@
 ﻿@page "/get-bigquery-data"
 @inject HttpClient Http
 
-<PageTitle>Weather forecast</PageTitle>
+<PageTitle>BigQuery Test Data</PageTitle>
 
-<h1>Weather forecast</h1>
+<h1>BigQuery Test Data</h1>
 
 <p>This component demonstrates fetching data from the server.</p>
 
-@if (forecasts == null)
+@if (tb1TestDatas == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -16,20 +16,30 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
+                <th>col1</th>
+                <th>colString</th>
+                @*<th>TIMESTAMP</th>
+                <th>datetime_KST</th>
+                <th>datetime_LA</th>
+                <th>date_ymd</th>
+                <th>date_dt</th>
+                <th>UUID</th>
+                <th>VAL1</th>*@
             </tr>
         </thead>
         <tbody>
-            @foreach (var forecast in forecasts)
+            @foreach (var tb1TestData in tb1TestDatas)
             {
                 <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
+                    <td>@tb1TestData.col1</td>
+                    <td>@tb1TestData.colString</td>
+                    @*<td>@row.TIMESTAMP</td>
+                    <td>@row.datetime_KST</td>
+                    <td>@row.datetime_LA</td>
+                    <td>@row.date_ymd</td>
+                    <td>@row.date_dt</td>
+                    <td>@row.UUID</td>
+                    <td>@row.VAL1</td>*@
                 </tr>
             }
         </tbody>
@@ -37,21 +47,54 @@ else
 }
 
 @code {
-    private WeatherForecast[]? forecasts;
+    private tb1TestData[]? tb1TestDatas;
+
+    //private WeatherForecast[]? forecasts;
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
+        Controller.BigQueryController Bq = new();
+        var result = Bq.Select_tb1TestData();
+
+        foreach (var row in result)
+        {
+            tb1TestDatas.Append<tb1TestData>(new tb1TestData {
+                col1 = Convert.ToInt32(row["col1"])
+                , colString = row["colString"].ToString()
+                //, TIMESTAMP = Convert.ToDateTime(row["TIMESTAMP"])
+                //, datetime_KST = Convert.ToDateTime(row["datetime_KST"])
+                //, datetime_LA = Convert.ToDateTime(row["datetime_LA"])
+                //, date_ymd = Convert.ToDateTime(row["date_ymd"])
+                //, date_dt = Convert.ToDateTime(row["date_dt"])
+                //, UUID = row["UUID"].ToString()
+                //, VAL1 = row["VAL1"].ToString()
+                }
+            );
+            
+            //Debug.WriteLine($"{row["col1"]}, {row["colString"]}, {row["datetime_KST"]}, {row["datetime_LA"]}, {row["UUID"]}, {row["VAL1"]} views");
+        }
+
+        //forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
     }
 
-    public class WeatherForecast
+    public class tb1TestData
     {
-        public DateTime Date { get; set; }
-
-        public int TemperatureC { get; set; }
-
-        public string? Summary { get; set; }
-
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+        public int col1 { get; set; }
+        public string? colString { get; set; }
+        //public DateTime? TIMESTAMP { get; set; }
+        //public DateTime? datetime_KST { get; set; }
+        //public DateTime? datetime_LA { get; set; }
+        //public DateOnly? date_ymd { get; set; }
+        //public DateTime? date_dt { get; set; }
+        //public string? UUID { get; set; }
+        //public string? VAL1 { get; set; }
     }
+
+    //public class WeatherForecast
+    //{
+    //    public DateTime Date { get; set; }
+    //    public int TemperatureC { get; set; }
+    //    public string? Summary { get; set; }
+    //    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    //}
 }

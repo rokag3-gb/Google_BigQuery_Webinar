@@ -38,14 +38,18 @@ namespace FormApp1
 
         private void btn¡∂»∏_Click(object sender, EventArgs e)
         {
-            string query = @"select
-                        col1
-                        , colString
-                        , DATETIME(CURRENT_TIMESTAMP(), 'Asia/Seoul') as datetime_KST
-                        , DATETIME(CURRENT_TIMESTAMP(), 'America/Los_Angeles') AS datetime_LA
-                        , generate_uuid() as UUID
-                        , 'asd' as VAL1
-                    from `ds01.tb1`;";
+            string query = @"
+                select	col1
+	                , colString
+	                , CURRENT_TIMESTAMP() as TIMESTAMP
+	                , DATETIME(CURRENT_TIMESTAMP(), 'Asia/Seoul') as datetime_KST
+	                , DATETIME(CURRENT_TIMESTAMP(), 'America/Los_Angeles') AS datetime_LA
+	                , DATE(2023, 4, 4) AS date_ymd
+	                , DATETIME(DATETIME '2023-04-04 23:59:59') AS date_dt
+	                , generate_uuid() as UUID
+	                , 'asd' as VAL1
+                from	`ds01.tb1`;
+                ";
 
             BigQueryClient client = BigQueryClient.Create(projectId, Secret.credential_SDTeam);
 
@@ -55,7 +59,14 @@ namespace FormApp1
 
             foreach (var row in result)
             {
-                Debug.WriteLine($"{row["col1"]}: {row["colString"]}, {row["datetime_KST"]}, {row["datetime_LA"]}, {row["UUID"]}, {row["VAL1"]} views");
+                Debug.WriteLine($"{row["col1"]}" +
+                    $", {row["colString"]}" +
+                    $", {row["datetime_KST"]}" +
+                    $", {row["datetime_LA"]}" +
+                    $", {row["date_ymd"]}" +
+                    $", {row["date_dt"]}" +
+                    $", {row["UUID"]}" +
+                    $", {row["VAL1"]}");
             }
         }
 
