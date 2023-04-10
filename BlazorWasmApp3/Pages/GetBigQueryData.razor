@@ -7,7 +7,7 @@
 
 <p>This component demonstrates fetching data from the server.</p>
 
-@if (tb1TestDatas == null)
+@if (forecasts == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -16,65 +16,78 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>col1</th>
+                @*<th>col1</th>
                 <th>colString</th>
-                @*<th>TIMESTAMP</th>
+                <th>TIMESTAMP</th>
                 <th>datetime_KST</th>
                 <th>datetime_LA</th>
                 <th>date_ymd</th>
                 <th>date_dt</th>
                 <th>UUID</th>
                 <th>VAL1</th>*@
+
+                <th>Date</th>
+                <th>TemperatureC</th>
+                <th>Summary</th>
+                <th>TemperatureF</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var tb1TestData in tb1TestDatas)
+            @foreach (var WeatherForecast in forecasts)
+            {
+                <tr>
+                    <td>@WeatherForecast.Date</td>
+                    <td>@WeatherForecast.TemperatureC</td>
+                    <td>@WeatherForecast.Summary</td>
+                    <td>@WeatherForecast.TemperatureF</td>
+                </tr>
+            }
+            @*@foreach (var tb1TestData in tb1TestDatas)
             {
                 <tr>
                     <td>@tb1TestData.col1</td>
                     <td>@tb1TestData.colString</td>
-                    @*<td>@row.TIMESTAMP</td>
+                    <td>@row.TIMESTAMP</td>
                     <td>@row.datetime_KST</td>
                     <td>@row.datetime_LA</td>
                     <td>@row.date_ymd</td>
                     <td>@row.date_dt</td>
                     <td>@row.UUID</td>
-                    <td>@row.VAL1</td>*@
+                    <td>@row.VAL1</td>
                 </tr>
-            }
+            }*@
         </tbody>
     </table>
 }
 
 @code {
     private tb1TestData[]? tb1TestDatas;
-
-    //private WeatherForecast[]? forecasts;
+    private WeatherForecast[]? forecasts;
 
     protected override async Task OnInitializedAsync()
     {
-        Controller.BigQueryController Bq = new();
-        var result = Bq.Select_tb1TestData();
+        //Controller.BigQueryController Bq = new();
+        //var result = Bq.Select_tb1TestData();
 
-        foreach (var row in result)
-        {
-            tb1TestDatas.Append<tb1TestData>(new tb1TestData {
-                col1 = Convert.ToInt32(row["col1"])
-                , colString = row["colString"].ToString()
-                //, TIMESTAMP = Convert.ToDateTime(row["TIMESTAMP"])
-                //, datetime_KST = Convert.ToDateTime(row["datetime_KST"])
-                //, datetime_LA = Convert.ToDateTime(row["datetime_LA"])
-                //, date_ymd = Convert.ToDateTime(row["date_ymd"])
-                //, date_dt = Convert.ToDateTime(row["date_dt"])
-                //, UUID = row["UUID"].ToString()
-                //, VAL1 = row["VAL1"].ToString()
-                }
-            );
+        //foreach (var row in result)
+        //{
+        //    tb1TestDatas.Append<tb1TestData>(new tb1TestData {
+        //        col1 = Convert.ToInt32(row["col1"])
+        //        , colString = row["colString"].ToString()
+        //        //, TIMESTAMP = Convert.ToDateTime(row["TIMESTAMP"])
+        //        //, datetime_KST = Convert.ToDateTime(row["datetime_KST"])
+        //        //, datetime_LA = Convert.ToDateTime(row["datetime_LA"])
+        //        //, date_ymd = Convert.ToDateTime(row["date_ymd"])
+        //        //, date_dt = Convert.ToDateTime(row["date_dt"])
+        //        //, UUID = row["UUID"].ToString()
+        //        //, VAL1 = row["VAL1"].ToString()
+        //        }
+        //    );
             
-            //Debug.WriteLine($"{row["col1"]}, {row["colString"]}, {row["datetime_KST"]}, {row["datetime_LA"]}, {row["UUID"]}, {row["VAL1"]} views");
-        }
+        //    //Debug.WriteLine($"{row["col1"]}, {row["colString"]}, {row["datetime_KST"]}, {row["datetime_LA"]}, {row["UUID"]}, {row["VAL1"]} views");
+        //}
 
-        //forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
+        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
     }
 
     public class tb1TestData
@@ -90,11 +103,11 @@ else
         //public string? VAL1 { get; set; }
     }
 
-    //public class WeatherForecast
-    //{
-    //    public DateTime Date { get; set; }
-    //    public int TemperatureC { get; set; }
-    //    public string? Summary { get; set; }
-    //    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-    //}
+    public class WeatherForecast
+    {
+        public DateTime Date { get; set; }
+        public int TemperatureC { get; set; }
+        public string? Summary { get; set; }
+        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    }
 }
