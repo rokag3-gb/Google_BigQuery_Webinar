@@ -17,8 +17,8 @@ namespace FormApp1
         string projectName = "SD Team";
         string datasetId = "ds01";
         string datasetName = "ds01";
-        string tableId = "tb1";
-        string tableName = "tb1";
+        string tableId = "Deal";
+        string tableName = "Deal";
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -72,7 +72,7 @@ namespace FormApp1
 
         private void btnInsert_Click(object sender, EventArgs e)
         {
-            BigQueryClient client = BigQueryClient.Create(projectId, Secret.credential_SDTeam);
+            Google.Cloud.BigQuery.V2.BigQueryClient client = BigQueryClient.Create(projectId, Secret.credential_SDTeam);
 
             BigQueryInsertRow[] insert_rows = new BigQueryInsertRow[] {
                 // The insert ID is optional, but can avoid duplicate data
@@ -87,9 +87,15 @@ namespace FormApp1
                 }
             };
 
-            client.InsertRows(datasetId, tableId, insert_rows);
+            client.InsertRows(datasetId, "tb1", insert_rows);
 
             client.Dispose();
+        }
+
+        private void btnExecuteQuery_Click(object sender, EventArgs e)
+        {
+            BigQueryClient3 client = new();
+            client.ExecuteQuery();
         }
     }
 
