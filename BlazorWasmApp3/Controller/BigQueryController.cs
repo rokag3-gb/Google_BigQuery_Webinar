@@ -1,10 +1,13 @@
-﻿//using Google.Apis.Bigquery.v2.Data;
-//using Google.Apis.Bigquery.v2;
-using Google.Cloud.BigQuery.V2;
+﻿using Google.Cloud.BigQuery.V2;
 using Google.Apis.Auth.OAuth2;
+using Google.Apis.Bigquery.v2.Data;
+using Google.Apis.Bigquery.v2;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BlazorWasmApp3.Controller
 {
+    [ApiController]
+    [Route("[controller]")]
     public class BigQueryController
     {
         string _projectId = "cloudmate-sdteam";
@@ -40,8 +43,10 @@ namespace BlazorWasmApp3.Controller
 	                , 'asd' as VAL1
                 from	`ds01.tb1`;
                 ";
-
-        public BigQueryResults? Select_tb1TestData()
+        
+        [Route("/bigquery/Select_tb1TestData/")]
+        [HttpGet]
+        public async Task<BigQueryResults?> Select_tb1TestData()
         {
             BigQueryResults result;
 

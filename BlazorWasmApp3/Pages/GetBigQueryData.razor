@@ -62,6 +62,8 @@ else
 
 @code {
     private tb1TestData[]? tb1TestDatas;
+    private Google.Cloud.BigQuery.V2.BigQueryResults bqr;
+
     private WeatherForecast[]? forecasts;
 
     protected override async Task OnInitializedAsync()
@@ -83,9 +85,10 @@ else
         //        //, VAL1 = row["VAL1"].ToString()
         //        }
         //    );
-            
         //    //Debug.WriteLine($"{row["col1"]}, {row["colString"]}, {row["datetime_KST"]}, {row["datetime_LA"]}, {row["UUID"]}, {row["VAL1"]} views");
         //}
+
+        var bqr2 = await Http.GetStringAsync("/bigquery/Select_tb1TestData/");
 
         forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
     }
