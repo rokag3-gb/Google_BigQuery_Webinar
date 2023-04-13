@@ -91,6 +91,7 @@ namespace FormApp1
             dataGridView1.DataSource = dt;
             dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
 
+
             dataGridView1.Columns["Amount"].DefaultCellStyle.Format = "N2";
             dataGridView1.Columns["Amount"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
         }
