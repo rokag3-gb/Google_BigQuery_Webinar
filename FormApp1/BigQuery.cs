@@ -69,7 +69,7 @@ namespace FormApp1
             Items[6] = new ItemData { ItemName = "Google Cloud Storage", Amount = 420 };
         }
 
-        public async Task HttpRequestQuery()
+        public async Task<DataTable> HttpRequestQueryAsync()
         {
             Debug.WriteLine("------ 작업 시작 ------\r\n");
 
@@ -142,8 +142,10 @@ namespace FormApp1
             Debug.WriteLine(responseContent);
 
             DataTable dt = ParseToDataTable(responseContent);
-
+            
             Debug.WriteLine("------ 작업 완료 ------\r\n");
+
+            return dt;
         }
 
         DataTable ParseToDataTable(string data)
