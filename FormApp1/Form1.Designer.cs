@@ -31,6 +31,8 @@
             btn조회 = new Button();
             btnInsert = new Button();
             btnExecuteQuery = new Button();
+            chartControl1 = new DevExpress.XtraCharts.ChartControl();
+            ((System.ComponentModel.ISupportInitialize)chartControl1).BeginInit();
             SuspendLayout();
             // 
             // btn조회
@@ -63,6 +65,13 @@
             btnExecuteQuery.UseVisualStyleBackColor = true;
             btnExecuteQuery.Click += btnExecuteQuery_Click;
             // 
+            // chartControl1
+            // 
+            chartControl1.Location = new Point(0, 0);
+            chartControl1.Name = "chartControl1";
+            chartControl1.Size = new Size(300, 200);
+            chartControl1.TabIndex = 0;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(9F, 20F);
@@ -75,6 +84,7 @@
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Form1";
             Load += Form1_Load;
+            ((System.ComponentModel.ISupportInitialize)chartControl1).EndInit();
             ResumeLayout(false);
         }
 
@@ -83,5 +93,6 @@
         private Button btn조회;
         private Button btnInsert;
         private Button btnExecuteQuery;
+        private DevExpress.XtraCharts.ChartControl chartControl1;
     }
 }

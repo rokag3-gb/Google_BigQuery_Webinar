@@ -146,6 +146,58 @@ namespace FormApp1
             Debug.WriteLine("------ 작업 완료 ------\r\n");
         }
 
+        DataTable ParseToDataTable(string data)
+        {
+            var dt = new DataTable();
+
+            try
+            {
+                var jobject = JObject.Parse(data);
+                var rows = jobject["rows"];
+                var fields = jobject["schema"]["fields"];
+
+                // Add columns
+                if (fields != null)
+                {
+                    foreach (var field in fields)
+                    {
+                        string value;
+                        _ = TypeMapper.TryGetValue(key: field["type"].ToString(), value: out value);
+
+                        dt.Columns.Add(field["name"].ToString(), Type.GetType($"System.{value}"));
+                    }
+                }
+
+                // Add rows
+                if (rows != null)
+                {
+                    foreach (var row in rows)
+                    {
+                        var dataRow = dt.NewRow();
+                        var rowValues = row["f"];
+
+                        for (int i = 0; i < rowValues.Count(); i++)
+                        {
+                            //Debug.WriteLine($"{dt.Columns[i].ColumnName} = {rowValues[i]["v"]?.ToString()}");
+
+                            dataRow[i] = rowValues[i]["v"]?.ToString();
+                        }
+
+                        dt.Rows.Add(dataRow);
+                    }
+                }
+
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+            }
+        }
+
         public async Task BigQueryV2SDK_ExecuteQuery()
         {
             Debug.WriteLine("------ 작업 시작 ------\r\n");
@@ -233,58 +285,6 @@ namespace FormApp1
 
                 if (client != null)
                     client.Dispose();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-            }
-        }
-
-        DataTable ParseToDataTable(string data)
-        {
-            var dt = new DataTable();
-
-            try
-            {
-                var jobject = JObject.Parse(data);
-                var rows = jobject["rows"];
-                var fields = jobject["schema"]["fields"];
-
-                // Add columns
-                if (fields != null)
-                {
-                    foreach (var field in fields)
-                    {
-                        string value;
-                        _ = TypeMapper.TryGetValue(key: field["type"].ToString(), value: out value);
-
-                        dt.Columns.Add(field["name"].ToString(), Type.GetType($"System.{value}"));
-                    }
-                }
-
-                // Add rows
-                if (rows != null)
-                {
-                    foreach (var row in rows)
-                    {
-                        var dataRow = dt.NewRow();
-                        var rowValues = row["f"];
-
-                        for (int i = 0; i < rowValues.Count(); i++)
-                        {
-                            Debug.WriteLine($"{dt.Columns[i].ColumnName} = {rowValues[i]["v"]?.ToString()}");
-
-                            dataRow[i] = rowValues[i]["v"]?.ToString();
-                        }
-
-                        dt.Rows.Add(dataRow);
-                    }
-                }
-
-                return dt;
             }
             catch (Exception ex)
             {

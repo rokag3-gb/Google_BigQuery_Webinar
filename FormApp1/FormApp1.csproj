@@ -9,6 +9,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DevExpress.Charts" Version="22.1.8" />
+    <PackageReference Include="DevExpress.Charts.Core" Version="22.1.8" />
+    <PackageReference Include="DevExpress.Data" Version="22.1.8" />
+    <PackageReference Include="DevExpress.DataVisualization.Core" Version="22.1.8" />
+    <PackageReference Include="DevExpress.Drawing" Version="22.1.8" />
+    <PackageReference Include="DevExpress.Map.Core" Version="22.1.8" />
+    <PackageReference Include="DevExpress.PivotGrid.Core" Version="22.1.8" />
+    <PackageReference Include="DevExpress.Printing.Core" Version="22.1.8" />
+    <PackageReference Include="DevExpress.Reporting.Core" Version="22.1.8" />
+    <PackageReference Include="DevExpress.Scheduler.Core" Version="22.1.8" />
+    <PackageReference Include="DevExpress.Scheduler.CoreDesktop" Version="22.1.8" />
+    <PackageReference Include="DevExpress.Utils" Version="22.1.8" />
+    <PackageReference Include="DevExpress.Utils.UI" Version="22.1.8" />
+    <PackageReference Include="DevExpress.Win.Charts" Version="22.1.8" />
+    <PackageReference Include="DevExpress.Win.Grid" Version="22.1.8" />
+    <PackageReference Include="DevExpress.WindowsDesktop.Charts" Version="20.2.5" />
+    <PackageReference Include="DevExpress.WindowsDesktop.Charts.Core" Version="20.2.5" />
     <PackageReference Include="Google.Apis.Bigquery.v2" Version="1.60.0.2998" />
     <PackageReference Include="Google.Cloud.BigQuery.V2" Version="3.2.0" />
   </ItemGroup>
