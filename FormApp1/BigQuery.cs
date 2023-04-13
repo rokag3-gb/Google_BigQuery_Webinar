@@ -12,7 +12,7 @@ namespace FormApp1
 {
     public class BigQueryHttpClient
     {
-        string _projectId = string.Empty; //string projectName = "SD Team";
+        string _projectId = string.Empty; //string _projectName = "SD Team";
         string _datasetId = string.Empty;
         string _location = string.Empty;
         string _tableId = "Deal";
@@ -60,13 +60,13 @@ namespace FormApp1
             };
 
             // Item 7개
-            Items[0] = new ItemData { ItemName = "Google BigQuery API", Amount = 297000 };
-            Items[1] = new ItemData { ItemName = "Google BigQuery Streaming API", Amount = 178500 };
-            Items[2] = new ItemData { ItemName = "Google Iam-admin Service Accounts", Amount = 9600 };
-            Items[3] = new ItemData { ItemName = "Google Kubernetes Engine", Amount = 614780 };
-            Items[4] = new ItemData { ItemName = "Google Workspace", Amount = 8210 };
-            Items[5] = new ItemData { ItemName = "Google App Engine", Amount = 95120 };
-            Items[6] = new ItemData { ItemName = "Google Cloud Storage", Amount = 4200 };
+            Items[0] = new ItemData { ItemName = "Google BigQuery API", Amount = 10650 };
+            Items[1] = new ItemData { ItemName = "Google BigQuery Streaming API", Amount = 9850 };
+            Items[2] = new ItemData { ItemName = "Google Iam-admin Service Accounts", Amount = 960 };
+            Items[3] = new ItemData { ItemName = "Google Kubernetes Engine", Amount = 31470 };
+            Items[4] = new ItemData { ItemName = "Google Workspace", Amount = 821 };
+            Items[5] = new ItemData { ItemName = "Google App Engine", Amount = 9510 };
+            Items[6] = new ItemData { ItemName = "Google Cloud Storage", Amount = 420 };
         }
 
         public async Task HttpRequestQuery()
@@ -74,12 +74,15 @@ namespace FormApp1
             Debug.WriteLine("------ 작업 시작 ------\r\n");
 
             string url = $"https://www.googleapis.com/bigquery/v2/projects/{_projectId}/queries?location={_location}";
+            //url = $"http://20.196.221.189/bigquery/v2/projects/{_projectId}/queries?location={_location}";
 
+            #region (주석 처리) service_account_key.json
             //string jsonPath = @"path/to/service_account_key.json";
             //string json = File.ReadAllText(jsonPath);
             //var credential = GoogleCredential.FromJson(json).CreateScoped("https://www.googleapis.com/auth/bigquery");
             //credential.GetAccessTokenForRequestAsync().Wait();
-            
+            #endregion
+
             var credential = Secret.credential_SDTeam.CreateScoped("https://www.googleapis.com/auth/bigquery");
             var token = await credential.UnderlyingCredential.GetAccessTokenForRequestAsync();
             
@@ -87,6 +90,7 @@ namespace FormApp1
 
             var httpReqMsg = new HttpRequestMessage(HttpMethod.Post, url);
             httpReqMsg.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            //httpReqMsg.Headers.Add("Host", "test.gscdn.com");
 
             //httpRequestMessage.Content = new StringContent("{ \"query\": \"select * from `cloudmate-sdteam.ds01.tb1`;\" }", Encoding.UTF8, "application/json");
 
@@ -100,23 +104,22 @@ namespace FormApp1
                         + $", Item"
                         + $", IsCancel"
                         + $", Amount"
-                        /*
                         + $", Tax"
                         + $", Total"
                         + $", Paid"
                         + $", Balance"
-                        + $", ContId"
+                        //+ $", ContId"
                         + $", IsInvoice"
                         + $", InvoiceMonth"
                         + $", Note"
                         + $", BillInfo"
-                        + $", CreateDate"
-                        + $", CreateId"
-                        + $", ModifyDate"
-                        + $", ModifyId"
-                        */
+                        //+ $", CreateDate"
+                        //+ $", CreateId"
+                        //+ $", ModifyDate"
+                        //+ $", ModifyId"
                         + $" from `cloudmate-sdteam.{this._datasetId}.{this._tableId}`"
-                        + $" where TranDate between Date(\"2023-01-01\") and date(\"{DateTime.Now.ToString("yyyy-MM-dd")}\");"
+                        + $" where TranDate between Date(\"2023-01-01\") and date(\"{DateTime.Now.ToString("yyyy-MM-dd")}\")"
+                        + $" limit 10;"
                 , useLegacySql = false
             };
             var json = JsonConvert.SerializeObject(query);
@@ -130,9 +133,8 @@ namespace FormApp1
             //httpRequestMessage.Content = new StringContent(queryBody.ToString(), Encoding.UTF8, "application/json");
 
             var httpClient = new HttpClient();
-            //var response = httpClient.SendAsync(httpRequestMessage).Result;
-            //var responseContent = response.Content.ReadAsStringAsync().Result;
 
+            // Send!!
             var response = await httpClient.SendAsync(httpReqMsg);
             var responseContent = await response.Content.ReadAsStringAsync();
 
@@ -193,19 +195,30 @@ namespace FormApp1
                 foreach (var i in Enumerable.Range(1, 100000000))
                 {
                     var item = Items[Random.Shared.Next(0, 6)];
+                    var TranDate = DateTime.Now.AddDays(Random.Shared.Next(1, 100) * -1);
 
                     BigQueryInsertRow row = new BigQueryInsertRow(insertId: $"row{i}");
-                    row.Add("TranDate", DateTime.Now.AddDays(Random.Shared.Next(1, 100) * -1).ToString("yyyy-MM-dd"));
+                    row.Add("TranDate", TranDate.ToString("yyyy-MM-dd"));
                     row.Add("DealKind", (Random.Shared.Next(0, 2) == 2) ? "매입" : "매출");
                     row.Add("AccountId", Random.Shared.Next(102, 146));
                     row.Add("ManagerId", UserIds[Random.Shared.Next(0, 4)]);
                     row.Add("Item", item.ItemName);
                     row.Add("IsCancel", (Random.Shared.Next(0, 5) == 3) ? true : false);
                     row.Add("Amount", item.Amount);
+                    row.Add("Tax", item.Amount * 0.1);
+                    row.Add("Total", item.Amount * 1.1);
+                    row.Add("Paid", 0);
+                    row.Add("Balance", item.Amount * 1.1);
+                    row.Add("ContId", null);
+                    row.Add("IsInvoice", (Random.Shared.Next(0, 5) >= 1) ? true : false);
+                    row.Add("InvoiceMonth", TranDate.ToString("yyyyMM"));
+                    //row.Add("Note", null);
+                    //row.Add("BillInfo", null);
+                    row.Add("CreateId", UserIds[Random.Shared.Next(0, 4)]);
 
                     insert_rows.Add(row);
 
-                    if (i % 20 == 0)
+                    if (i % 100 == 0)
                     {
                         client.InsertRows(this._datasetId, this._tableId, insert_rows);
 
@@ -220,19 +233,6 @@ namespace FormApp1
 
                 if (client != null)
                     client.Dispose();
-
-                //BigQueryInsertRow[] insert_rows2 = new BigQueryInsertRow[] {
-                //    // The insert ID is optional, but can avoid duplicate data
-                //    // when retrying inserts.
-                //    new BigQueryInsertRow(insertId: "row1") {
-                //        { "col1", 100 },
-                //        { "colString", "WA" }
-                //    },
-                //    new BigQueryInsertRow(insertId: "row2") {
-                //        { "col1", 101 },
-                //        { "colString", "Colorado" }
-                //    }
-                //};
             }
             catch (Exception ex)
             {
@@ -275,7 +275,9 @@ namespace FormApp1
 
                         for (int i = 0; i < rowValues.Count(); i++)
                         {
-                            dataRow[i] = rowValues[i]["v"].ToString();
+                            Debug.WriteLine($"{dt.Columns[i].ColumnName} = {rowValues[i]["v"]?.ToString()}");
+
+                            dataRow[i] = rowValues[i]["v"]?.ToString();
                         }
 
                         dt.Rows.Add(dataRow);

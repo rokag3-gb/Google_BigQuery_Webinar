@@ -47,12 +47,22 @@ namespace FormApp1
 
         private void btnInsert_Click(object sender, EventArgs e)
         {
-            BigQueryHttpClient client = new BigQueryHttpClient(
+            try
+            {
+                BigQueryHttpClient client = new BigQueryHttpClient(
                 projectId: "cloudmate-sdteam"
                 , datasetId: "ds01"
                 , location: "asia-northeast3");
 
-            client.BigQueryV2SDK_InsertData();
+                client.BigQueryV2SDK_InsertData();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+            }
         }
     }
 }
