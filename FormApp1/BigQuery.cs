@@ -3,28 +3,37 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Diagnostics;
 using System.Text;
-//using System.Threading.Tasks;
-using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Data;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-//using Google.Apis.Auth.OAuth2;
+using Google.Cloud.BigQuery.V2;
 
 namespace FormApp1
 {
-    public class BigQueryClient3
+    public class BigQueryHttpClient
     {
-        string projectId = "cloudmate-sdteam";
-        //string projectName = "SD Team";
-        string datasetId = "ds01";
-        string tableId = "Deal";
-        string location = "asia-northeast3";
+        string _projectId = string.Empty; //string projectName = "SD Team";
+        string _datasetId = string.Empty;
+        string _location = string.Empty;
+        string _tableId = "Deal";
 
         Dictionary<string, string> TypeMapper; // key: BigQuery 데이터타입, value: C# 데이터타입
-        
-        public BigQueryClient3()
+
+        string[] UserIds = new string[5];
+        ItemData[] Items = new ItemData[7];
+
+        private record ItemData
         {
+            public string? ItemName { get; set; } = string.Empty;
+            public float? Amount { get; set; } = 0;
+        }
+
+        public BigQueryHttpClient(string projectId = "cloudmate-sdteam", string datasetId = "ds01", string location = "asia-northeast3")
+        {
+            this._projectId = projectId;
+            this._datasetId = datasetId;
+            this._location = location;
+
             // key: BigQuery 데이터타입, value: C# 데이터타입
             TypeMapper = new Dictionary<string, string>();
             TypeMapper.Add("STRING", "String");
@@ -40,11 +49,31 @@ namespace FormApp1
             TypeMapper.Add("STRUCT", "DateRow");
             TypeMapper.Add("ARRAY", "object[]");
             TypeMapper.Add("GEOGRAPHY", "string");
+
+            // UserId 5개
+            UserIds = new string[] {
+                                "b23f0372-51f4-452a-a3f2-115ea2f13227"
+                                , "13a56e0f-7a31-4efa-a23b-852a7d95baaa"
+                                , "09b548d9-bb63-47be-8a40-885437d87846"
+                                , "126eb433-6087-424e-aae9-9109fbc7f28f"
+                                , "31911e82-fbd2-421c-9ad4-a673c8e48c2d"
+            };
+
+            // Item 7개
+            Items[0] = new ItemData { ItemName = "Google BigQuery API", Amount = 297000 };
+            Items[1] = new ItemData { ItemName = "Google BigQuery Streaming API", Amount = 178500 };
+            Items[2] = new ItemData { ItemName = "Google Iam-admin Service Accounts", Amount = 9600 };
+            Items[3] = new ItemData { ItemName = "Google Kubernetes Engine", Amount = 614780 };
+            Items[4] = new ItemData { ItemName = "Google Workspace", Amount = 8210 };
+            Items[5] = new ItemData { ItemName = "Google App Engine", Amount = 95120 };
+            Items[6] = new ItemData { ItemName = "Google Cloud Storage", Amount = 4200 };
         }
 
-        public async Task ExecuteQuery()
+        public async Task HttpRequestQuery()
         {
-            string url = $"https://www.googleapis.com/bigquery/v2/projects/{projectId}/queries?location={location}";
+            Debug.WriteLine("------ 작업 시작 ------\r\n");
+
+            string url = $"https://www.googleapis.com/bigquery/v2/projects/{_projectId}/queries?location={_location}";
 
             //string jsonPath = @"path/to/service_account_key.json";
             //string json = File.ReadAllText(jsonPath);
@@ -54,6 +83,8 @@ namespace FormApp1
             var credential = Secret.credential_SDTeam.CreateScoped("https://www.googleapis.com/auth/bigquery");
             var token = await credential.UnderlyingCredential.GetAccessTokenForRequestAsync();
             
+            Debug.WriteLine($"token = {token}\r\n");
+
             var httpReqMsg = new HttpRequestMessage(HttpMethod.Post, url);
             httpReqMsg.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
@@ -69,6 +100,7 @@ namespace FormApp1
                         + $", Item"
                         + $", IsCancel"
                         + $", Amount"
+                        /*
                         + $", Tax"
                         + $", Total"
                         + $", Paid"
@@ -82,7 +114,8 @@ namespace FormApp1
                         + $", CreateId"
                         + $", ModifyDate"
                         + $", ModifyId"
-                        + $" from `cloudmate-sdteam.{datasetId}.{tableId}`"
+                        */
+                        + $" from `cloudmate-sdteam.{this._datasetId}.{this._tableId}`"
                         + $" where TranDate between Date(\"2023-01-01\") and date(\"{DateTime.Now.ToString("yyyy-MM-dd")}\");"
                 , useLegacySql = false
             };
@@ -103,11 +136,111 @@ namespace FormApp1
             var response = await httpClient.SendAsync(httpReqMsg);
             var responseContent = await response.Content.ReadAsStringAsync();
 
+            Debug.WriteLine("------ 결과 데이터 ------\r\n");
             Debug.WriteLine(responseContent);
 
             DataTable dt = ParseToDataTable(responseContent);
 
-            Debug.WriteLine("------ 작업 완료 ------");
+            Debug.WriteLine("------ 작업 완료 ------\r\n");
+        }
+
+        public async Task BigQueryV2SDK_ExecuteQuery()
+        {
+            Debug.WriteLine("------ 작업 시작 ------\r\n");
+
+            string query = @"
+                select	col1
+	                , colString
+	                , CURRENT_TIMESTAMP() as TIMESTAMP
+	                , DATETIME(CURRENT_TIMESTAMP(), 'Asia/Seoul') as datetime_KST
+	                , DATETIME(CURRENT_TIMESTAMP(), 'America/Los_Angeles') AS datetime_LA
+	                , DATE(2023, 4, 4) AS date_ymd
+	                , DATETIME(DATETIME '2023-04-04 23:59:59') AS date_dt
+	                , generate_uuid() as UUID
+	                , 'asd' as VAL1
+                from	`ds01.tb1`;
+                ";
+
+            BigQueryClient client = BigQueryClient.Create(_projectId, Secret.credential_SDTeam);
+
+            var result = client.ExecuteQuery(query, parameters: null);
+
+            client.Dispose();
+
+            foreach (var row in result)
+            {
+                Debug.WriteLine($"{row["col1"]}" +
+                    $", {row["colString"]}" +
+                    $", {row["datetime_KST"]}" +
+                    $", {row["datetime_LA"]}" +
+                    $", {row["date_ymd"]}" +
+                    $", {row["date_dt"]}" +
+                    $", {row["UUID"]}" +
+                    $", {row["VAL1"]}");
+            }
+
+            Debug.WriteLine("------ 작업 완료 ------\r\n");
+        }
+
+        public async Task BigQueryV2SDK_InsertData()
+        {
+            try
+            {
+                BigQueryClient client = BigQueryClient.Create(_projectId, Secret.credential_SDTeam);
+
+                List<BigQueryInsertRow> insert_rows = new();
+
+                foreach (var i in Enumerable.Range(1, 100000000))
+                {
+                    var item = Items[Random.Shared.Next(0, 6)];
+
+                    BigQueryInsertRow row = new BigQueryInsertRow(insertId: $"row{i}");
+                    row.Add("TranDate", DateTime.Now.AddDays(Random.Shared.Next(1, 100) * -1).ToString("yyyy-MM-dd"));
+                    row.Add("DealKind", (Random.Shared.Next(0, 2) == 2) ? "매입" : "매출");
+                    row.Add("AccountId", Random.Shared.Next(102, 146));
+                    row.Add("ManagerId", UserIds[Random.Shared.Next(0, 4)]);
+                    row.Add("Item", item.ItemName);
+                    row.Add("IsCancel", (Random.Shared.Next(0, 5) == 3) ? true : false);
+                    row.Add("Amount", item.Amount);
+
+                    insert_rows.Add(row);
+
+                    if (i % 20 == 0)
+                    {
+                        client.InsertRows(this._datasetId, this._tableId, insert_rows);
+
+                        insert_rows.Clear();
+                    }
+                }
+
+                if (insert_rows.Count > 0)
+                {
+                    client.InsertRows(this._datasetId, this._tableId, insert_rows);
+                }
+
+                if (client != null)
+                    client.Dispose();
+
+                //BigQueryInsertRow[] insert_rows2 = new BigQueryInsertRow[] {
+                //    // The insert ID is optional, but can avoid duplicate data
+                //    // when retrying inserts.
+                //    new BigQueryInsertRow(insertId: "row1") {
+                //        { "col1", 100 },
+                //        { "colString", "WA" }
+                //    },
+                //    new BigQueryInsertRow(insertId: "row2") {
+                //        { "col1", 101 },
+                //        { "colString", "Colorado" }
+                //    }
+                //};
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+            }
         }
 
         DataTable ParseToDataTable(string data)
@@ -126,7 +259,7 @@ namespace FormApp1
                     foreach (var field in fields)
                     {
                         string value;
-                        TypeMapper.TryGetValue(field["type"].ToString(), out value);
+                        _ = TypeMapper.TryGetValue(key: field["type"].ToString(), value: out value);
 
                         dt.Columns.Add(field["name"].ToString(), Type.GetType($"System.{value}"));
                     }
@@ -157,169 +290,6 @@ namespace FormApp1
             }
             finally
             {
-            }
-        }
-    }
-
-    /// <summary>
-    /// 작동 안함
-    /// </summary>
-    public class BigQuery_Client
-    {
-        string projectId = "cloudmate-sdteam";
-        string projectName = "SD Team";
-        string datasetId = "ds01";
-        string datasetName = "ds01";
-        string tableId = "Deal";
-        string tableName = "Deal";
-
-        public BigQuery_Client() { }
-
-        public async Task ExecuteQuery()
-        {
-            // Google OAuth2.0 인증 정보 가져오기
-            var authUrl = "https://accounts.google.com/o/oauth2/token";
-            var authBody = new List<KeyValuePair<string, string>>
-            {
-                new KeyValuePair<string, string>("grant_type", "refresh_token"),
-                new KeyValuePair<string, string>("client_id", "388375681381-0idvqr38p61mb54lfnb8e1eevds1jh32.apps.googleusercontent.com"),
-                new KeyValuePair<string, string>("client_secret", "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"),
-                //new KeyValuePair<string, string>("refresh_token", "{your_refresh_token}")
-            };
-            var authResponse = await SendRequest(authUrl, HttpMethod.Post, null, authBody);
-
-            // BigQuery 쿼리 실행
-            var queryUrl = $"https://bigquery.googleapis.com/bigquery/v2/projects/{projectId}/queries";
-            var query = "SELECT * FROM ds01.tb1";
-            var queryBody = new Dictionary<string, string>
-            {
-                { "query", query }
-            };
-            var queryResponse = await SendRequest(queryUrl, HttpMethod.Post, authResponse["access_token"], queryBody);
-
-            // 결과 출력
-            foreach (var row in queryResponse["rows"])
-            {
-                Debug.WriteLine(string.Join(", ", row["f"]));
-            }
-        }
-
-        private async Task<Dictionary<string, dynamic>> SendRequest(string url, HttpMethod method, string accessToken, object body)
-        {
-            using (var client = new HttpClient())
-            {
-                var request = new HttpRequestMessage(method, url);
-
-                if (accessToken != null)
-                {
-                    request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
-                }
-
-                if (body != null)
-                {
-                    var content = new StringContent(body.ToString(), Encoding.UTF8, "application/json");
-                    request.Content = content;
-                    //request.Content = new FormUrlEncodedContent(GetKeyValuePairs(body));
-                }
-
-                var response = await client.SendAsync(request);
-                var responseContent = await response.Content.ReadAsStringAsync();
-
-                var json = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(responseContent);
-                return json;
-            }
-        }
-
-        private IEnumerable<KeyValuePair<string, string>> GetKeyValuePairs(object obj)
-        {
-            var properties = obj.GetType().GetProperties();
-
-            foreach (var property in properties)
-            {
-                var key = property.Name;
-                var value = property.GetValue(obj)?.ToString();
-
-                if (value != null)
-                {
-                    yield return new KeyValuePair<string, string>(key, value);
-                }
-            }
-        }
-    }
-    
-    /// <summary>
-    /// 작동 안함
-    /// </summary>
-    public class clsBigQuery
-    {
-        string projectId = "cloudmate-sdteam";
-        string projectName = "SD Team";
-        string datasetId = "ds01";
-        string datasetName = "ds01";
-        string tableId = "Deal";
-        string tableName = "Deal";
-
-        public async Task Execute()
-        {
-            // BigQuery API 키 가져오기
-            var apiKey = "AIzaSyAs4_RgR84GZsSey4c2_7np4DamkjbJ50g";
-
-            // BigQuery 쿼리 실행
-            var queryUrl = $"https://bigquery.googleapis.com/bigquery/v2/projects/{projectId}/queries?key={apiKey}";
-            var query = "SELECT * FROM ds01.tb1";
-            var queryBody = new Dictionary<string, string>
-            {
-                { "query", query }
-            };
-            var queryResponse = await SendRequest(queryUrl, HttpMethod.Post, null, queryBody);
-            
-            // 결과 출력
-            //foreach (var row in queryResponse["rows"])
-            //{
-            //    Debug.WriteLine(string.Join(", ", row["f"]));
-            //}
-            Debug.WriteLine(queryResponse.ToString());
-        }
-
-        public async Task<Dictionary<string, dynamic>> SendRequest(string url, HttpMethod method, string accessToken, object body)
-        {
-            using (var client = new HttpClient())
-            {
-                var request = new HttpRequestMessage(method, url);
-
-                if (accessToken != null)
-                {
-                    request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
-                }
-
-                if (body != null)
-                {
-                    var content = new StringContent("SELECT * FROM ds01.tb1", Encoding.UTF8, "application/json");
-                    request.Content = content;
-                    //request.Content = new FormUrlEncodedContent(GetKeyValuePairs(body));
-                }
-
-                var response = await client.SendAsync(request);
-                var responseContent = await response.Content.ReadAsStringAsync();
-
-                var json = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(responseContent);
-                return json;
-            }
-        }
-
-        public IEnumerable<KeyValuePair<string, string>> GetKeyValuePairs(object obj)
-        {
-            var properties = obj.GetType().GetProperties();
-
-            foreach (var property in properties)
-            {
-                var key = property.Name;
-                var value = property.GetValue(obj)?.ToString();
-
-                if (value != null)
-                {
-                    yield return new KeyValuePair<string, string>(key, value);
-                }
             }
         }
     }
