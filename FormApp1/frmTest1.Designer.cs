@@ -1,6 +1,6 @@
 ﻿namespace FormApp1
 {
-    partial class Form1
+    partial class frmTest1
     {
         /// <summary>
         ///  Required designer variable.
@@ -42,6 +42,8 @@
             dataGridView1 = new DataGridView();
             chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            txtResponse = new TextBox();
+            txtLoopCount = new TextBox();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)chart1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)chart2).BeginInit();
@@ -49,7 +51,7 @@
             // 
             // btn조회
             // 
-            btn조회.Location = new Point(704, 28);
+            btn조회.Location = new Point(991, 28);
             btn조회.Name = "btn조회";
             btn조회.Size = new Size(265, 81);
             btn조회.TabIndex = 0;
@@ -59,7 +61,7 @@
             // 
             // btnInsert
             // 
-            btnInsert.Location = new Point(416, 28);
+            btnInsert.Location = new Point(703, 28);
             btnInsert.Name = "btnInsert";
             btnInsert.Size = new Size(265, 81);
             btnInsert.TabIndex = 1;
@@ -100,7 +102,7 @@
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
             dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle2;
             dataGridView1.RowTemplate.Height = 29;
-            dataGridView1.Size = new Size(1150, 233);
+            dataGridView1.Size = new Size(1150, 491);
             dataGridView1.TabIndex = 4;
             // 
             // chart1
@@ -116,7 +118,7 @@
             series1.Legend = "Legend1";
             series1.Name = "SeriesDoughnut";
             chart1.Series.Add(series1);
-            chart1.Size = new Size(501, 488);
+            chart1.Size = new Size(501, 347);
             chart1.TabIndex = 5;
             chart1.Text = "chart1asd";
             chart1.TextAntiAliasingQuality = System.Windows.Forms.DataVisualization.Charting.TextAntiAliasingQuality.Normal;
@@ -140,11 +142,32 @@
             chart2.Text = "chart1asd";
             chart2.TextAntiAliasingQuality = System.Windows.Forms.DataVisualization.Charting.TextAntiAliasingQuality.Normal;
             // 
+            // txtResponse
+            // 
+            txtResponse.Location = new Point(23, 499);
+            txtResponse.Multiline = true;
+            txtResponse.Name = "txtResponse";
+            txtResponse.ScrollBars = ScrollBars.Both;
+            txtResponse.Size = new Size(488, 476);
+            txtResponse.TabIndex = 7;
+            // 
+            // txtLoopCount
+            // 
+            txtLoopCount.Font = new Font("Cascadia Code", 10.2F, FontStyle.Bold, GraphicsUnit.Point);
+            txtLoopCount.Location = new Point(304, 53);
+            txtLoopCount.Name = "txtLoopCount";
+            txtLoopCount.Size = new Size(91, 27);
+            txtLoopCount.TabIndex = 8;
+            txtLoopCount.Text = "100";
+            txtLoopCount.TextAlign = HorizontalAlignment.Right;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1692, 729);
+            ClientSize = new Size(1692, 987);
+            Controls.Add(txtLoopCount);
+            Controls.Add(txtResponse);
             Controls.Add(chart2);
             Controls.Add(chart1);
             Controls.Add(dataGridView1);
@@ -159,6 +182,7 @@
             ((System.ComponentModel.ISupportInitialize)chart1).EndInit();
             ((System.ComponentModel.ISupportInitialize)chart2).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -169,5 +193,7 @@
         private DataGridView dataGridView1;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart2;
+        private TextBox txtResponse;
+        private TextBox txtLoopCount;
     }
 }

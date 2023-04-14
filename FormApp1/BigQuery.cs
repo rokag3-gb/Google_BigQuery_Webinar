@@ -69,13 +69,16 @@ namespace FormApp1
             Items[6] = new ItemData { ItemName = "Google Cloud Storage", Amount = 420 };
         }
 
-        public async Task<DataTable> HttpRequestQueryAsync()
+        public async Task<string?> HttpRequestQueryAsync()
         {
             Debug.WriteLine("------ 작업 시작 ------\r\n");
 
-            string url = $"https://www.googleapis.com/bigquery/v2/projects/{_projectId}/queries?location={_location}";
-            //url = $"http://20.196.221.189/bigquery/v2/projects/{_projectId}/queries?location={_location}";
+            //string host = $"https://www.googleapis.com";
+            //string host = $"http://20.196.221.189"; // Azure VM
+            string host = $"http://34.64.87.33"; // Google Cloud Compute Engine
 
+            string url = $"{host}/bigquery/v2/projects/{_projectId}/queries?location={_location}";
+            
             #region (주석 처리) service_account_key.json
             //string jsonPath = @"path/to/service_account_key.json";
             //string json = File.ReadAllText(jsonPath);
@@ -91,23 +94,16 @@ namespace FormApp1
             var httpReqMsg = new HttpRequestMessage(HttpMethod.Post, url);
             httpReqMsg.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
             //httpReqMsg.Headers.Add("Host", "test.gscdn.com");
-
+            httpReqMsg.Headers.Add("Host", "proxy.matecdn.com");
+            
             //httpRequestMessage.Content = new StringContent("{ \"query\": \"select * from `cloudmate-sdteam.ds01.tb1`;\" }", Encoding.UTF8, "application/json");
 
             var query = new
             {
-                query = $"select DealId"
-                        + $", TranDate"
-                        + $", DealKind"
-                        + $", AccountId"
-                        + $", ManagerId"
-                        + $", Item"
-                        + $", IsCancel"
-                        + $", Amount"
-                        + $", Tax"
-                        + $", Total"
-                        + $", Paid"
-                        + $", Balance"
+                query = $"select DealId, TranDate, DealKind"
+                        + $", AccountId, ManagerId"
+                        + $", Item, IsCancel"
+                        + $", Amount, Tax, Total, Paid, Balance"
                         //+ $", ContId"
                         + $", IsInvoice"
                         + $", InvoiceMonth"
@@ -119,7 +115,7 @@ namespace FormApp1
                         //+ $", ModifyId"
                         + $" from `cloudmate-sdteam.{this._datasetId}.{this._tableId}`"
                         + $" where TranDate between Date(\"2023-01-01\") and date(\"{DateTime.Now.ToString("yyyy-MM-dd")}\")"
-                        + $" limit 10;"
+                        + $" limit 2;"
                 , useLegacySql = false
             };
             var json = JsonConvert.SerializeObject(query);
@@ -141,14 +137,14 @@ namespace FormApp1
             Debug.WriteLine("------ 결과 데이터 ------\r\n");
             Debug.WriteLine(responseContent);
 
-            DataTable dt = ParseToDataTable(responseContent);
+            //DataTable dt = ParseToDataTable(responseContent);
             
             Debug.WriteLine("------ 작업 완료 ------\r\n");
 
-            return dt;
+            return responseContent;
         }
 
-        DataTable ParseToDataTable(string data)
+        public DataTable ParseToDataTable(string data)
         {
             var dt = new DataTable();
 

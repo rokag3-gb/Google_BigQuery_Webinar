@@ -4,9 +4,9 @@ using System.Windows.Forms.DataVisualization.Charting;
 
 namespace FormApp1
 {
-    public partial class Form1 : Form
+    public partial class frmTest1 : Form
     {
-        public Form1()
+        public frmTest1()
         {
             InitializeComponent();
         }
@@ -86,14 +86,28 @@ namespace FormApp1
                 , datasetId: "ds01"
                 , location: "asia-northeast3");
 
-            DataTable dt = await client.HttpRequestQueryAsync();
+            int loopCount = (string.IsNullOrEmpty(txtLoopCount.Text) == false
+                && Convert.ToInt32(txtLoopCount.Text?.ToString()) > 0) ? Convert.ToInt32(txtLoopCount.Text?.ToString()) : 1;
 
-            dataGridView1.DataSource = dt;
-            dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
+            string response;
 
+            foreach (var i in Enumerable.Range(1, loopCount))
+            {
+                response = await client.HttpRequestQueryAsync();
 
-            dataGridView1.Columns["Amount"].DefaultCellStyle.Format = "N2";
-            dataGridView1.Columns["Amount"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                if (i % 6 == 0)
+                    Application.DoEvents();
+
+                txtResponse.Text += "-------------------------\r\n" + response;
+            }
+
+            DataTable dt = null;
+
+            //dataGridView1.DataSource = dt;
+            //dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
+
+            //dataGridView1.Columns["Amount"].DefaultCellStyle.Format = "N2";
+            //dataGridView1.Columns["Amount"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
         }
 
         private void btn¡∂»∏_Click(object sender, EventArgs e)
