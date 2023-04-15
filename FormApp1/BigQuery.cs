@@ -7,15 +7,17 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Data;
 using Google.Cloud.BigQuery.V2;
+using Google.Apis.Auth.OAuth2;
 
 namespace FormApp1
 {
     public class BigQueryHttpClient
     {
-        string _projectId = string.Empty; //string _projectName = "SD Team";
-        string _datasetId = string.Empty;
-        string _location = string.Empty;
-        string _tableId = "Deal";
+        public string _projectId = string.Empty; //string _projectName = "SD Team";
+        public string _datasetId = string.Empty;
+        public string _location = string.Empty;
+        public string _tableId = "Deal";
+        string auth_token = string.Empty;
 
         Dictionary<string, string> TypeMapper; // key: BigQuery 데이터타입, value: C# 데이터타입
 
@@ -33,6 +35,8 @@ namespace FormApp1
             this._projectId = projectId;
             this._datasetId = datasetId;
             this._location = location;
+
+            //GetAccessTokenForRequestAsync();
 
             // key: BigQuery 데이터타입, value: C# 데이터타입
             TypeMapper = new Dictionary<string, string>();
@@ -60,15 +64,29 @@ namespace FormApp1
             };
 
             // Item 7개
-            Items[0] = new ItemData { ItemName = "Google BigQuery API", Amount = 10650 };
-            Items[1] = new ItemData { ItemName = "Google BigQuery Streaming API", Amount = 9850 };
-            Items[2] = new ItemData { ItemName = "Google Iam-admin Service Accounts", Amount = 960 };
-            Items[3] = new ItemData { ItemName = "Google Kubernetes Engine", Amount = 31470 };
-            Items[4] = new ItemData { ItemName = "Google Workspace", Amount = 821 };
-            Items[5] = new ItemData { ItemName = "Google App Engine", Amount = 9510 };
-            Items[6] = new ItemData { ItemName = "Google Cloud Storage", Amount = 420 };
+            Items[0] = new ItemData { ItemName = "Google BigQuery API", Amount = 1065 };
+            Items[1] = new ItemData { ItemName = "Google BigQuery Streaming API", Amount = 985 };
+            Items[2] = new ItemData { ItemName = "Google Iam-admin Service Accounts", Amount = 96 };
+            Items[3] = new ItemData { ItemName = "Google Kubernetes Engine", Amount = 3147 };
+            Items[4] = new ItemData { ItemName = "Google Workspace", Amount = 82 };
+            Items[5] = new ItemData { ItemName = "Google App Engine", Amount = 951 };
+            Items[6] = new ItemData { ItemName = "Google Cloud Storage", Amount = 42 };
+        }
+        
+        public async void GetAccessTokenForRequestAsync()
+        {
+            if (string.IsNullOrEmpty(auth_token) || auth_token == string.Empty)
+            {
+                GoogleCredential credential = Secret.credential_SDTeam.CreateScoped("https://www.googleapis.com/auth/bigquery");
+
+                this.auth_token = await credential.UnderlyingCredential.GetAccessTokenForRequestAsync();
+            }
         }
 
+        /// <summary>
+        /// 사용하지 말아야 함. 토큰을 계속 발급받음.
+        /// </summary>
+        /// <returns></returns>
         public async Task<string?> HttpRequestQueryAsync()
         {
             Debug.WriteLine("------ 작업 시작 ------\r\n");
@@ -140,6 +158,72 @@ namespace FormApp1
             //DataTable dt = ParseToDataTable(responseContent);
             
             Debug.WriteLine("------ 작업 완료 ------\r\n");
+
+            return responseContent;
+        }
+        
+        public async Task<string?> HttpRequestQueryAsync(string host, string query)
+        {
+            string responseContent = string.Empty;
+
+            Debug.WriteLine("------ HttpRequestQueryAsync 시작 ------\r\n");
+
+            try
+            {
+                //string host = $"https://www.googleapis.com";
+                //string host = $"http://34.64.87.33"; // CacheCat on Google Compute Engine
+                //string host = $"http://20.196.221.189"; // Azure VM
+
+                string url = $"{host}/bigquery/v2/projects/{_projectId}/queries?location={_location}";
+
+                if (string.IsNullOrEmpty(auth_token) || auth_token == string.Empty)
+                {
+                    var credential = Secret.credential_SDTeam.CreateScoped("https://www.googleapis.com/auth/bigquery");
+
+                    auth_token = await credential.UnderlyingCredential.GetAccessTokenForRequestAsync();
+
+                    Debug.WriteLine($"token 발급 성공 -> {this.auth_token}\r\n");
+                }
+
+                var httpReqMsg = new HttpRequestMessage(HttpMethod.Post, url);
+                httpReqMsg.Headers.Authorization = new AuthenticationHeaderValue("Bearer", this.auth_token);
+
+                if (host == "http://34.64.87.33")
+                    httpReqMsg.Headers.Add("Host", "proxy.matecdn.com");
+                else if (host == "http://20.196.221.189")
+                    httpReqMsg.Headers.Add("Host", "test.gscdn.com");
+
+                //httpRequestMessage.Content = new StringContent("{ \"query\": \"select * from `cloudmate-sdteam.ds01.tb1`;\" }", Encoding.UTF8, "application/json");
+
+                var queryBody = new
+                {
+                    query = query
+                    ,
+                    useLegacySql = false
+                };
+                var json = JsonConvert.SerializeObject(queryBody);
+                httpReqMsg.Content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var httpClient = new HttpClient();
+
+                // Send!!
+                var response = await httpClient.SendAsync(httpReqMsg);
+                responseContent = await response.Content.ReadAsStringAsync();
+
+                //Debug.WriteLine("------ 결과 데이터 ------\r\n");
+                //Debug.WriteLine(responseContent);
+
+                //DataTable dt = ParseToDataTable(responseContent);
+
+                Debug.WriteLine("------ HttpRequestQueryAsync 완료 ------\r\n");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+            }
 
             return responseContent;
         }
@@ -267,11 +351,12 @@ namespace FormApp1
                     row.Add("CreateId", UserIds[Random.Shared.Next(0, 4)]);
 
                     insert_rows.Add(row);
-
-                    if (i % 100 == 0)
+                    
+                    if (i % Random.Shared.Next(100, 150) == 0)
                     {
                         client.InsertRows(this._datasetId, this._tableId, insert_rows);
 
+                        Debug.WriteLine($"------ {insert_rows.Count} rows inserted. ------\r\n");
                         insert_rows.Clear();
                     }
                 }
