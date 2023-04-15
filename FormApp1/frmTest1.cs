@@ -107,13 +107,37 @@ namespace FormApp1
             int loopCount = (string.IsNullOrEmpty(txtLoopCount.Text) == false
                 && Convert.ToInt32(txtLoopCount.Text?.ToString()) > 0) ? Convert.ToInt32(txtLoopCount.Text?.ToString()) : 1;
 
+            string host = $"https://www.googleapis.com";
+            //string host = $"http://34.64.87.33"; // CacheCat on Google Compute Engine
+            //string host = $"http://20.196.221.189"; // Azure VM
+            string TranDate = "";
+            string query = "";
+
             string response;
 
             foreach (var i in Enumerable.Range(1, loopCount))
             {
-                response = await client.HttpRequestQueryAsync();
+                TranDate = DateTime.Now.AddDays(Random.Shared.Next(1, 40) * -1).ToString("yyyy-MM-dd");
 
-                if (i % 6 == 0)
+                query = $"select DealId, TranDate, DealKind"
+                                + $", AccountId, ManagerId"
+                                + $", Item, IsCancel"
+                                + $", Amount, Tax, Total, Paid, Balance"
+                                //+ $", ContId"
+                                + $", IsInvoice"
+                                + $", InvoiceMonth"
+                                + $", Note"
+                                + $", BillInfo"
+                            //+ $", CreateDate"
+                            //+ $", CreateId"
+                            //+ $", ModifyDate"
+                            //+ $", ModifyId"
+                            + $" from `cloudmate-sdteam.ds01.Deal`"
+                            + $" where TranDate between Date(\"{TranDate}\") and date(\"{DateTime.Now.ToString("yyyy-MM-dd")}\");";
+
+                response = await client.HttpRequestQueryAsync(host, query);
+
+                if (i % 10 == 0)
                     Application.DoEvents();
 
                 txtResponse.Text += "-------------------------\r\n" + response;

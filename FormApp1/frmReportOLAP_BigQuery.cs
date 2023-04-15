@@ -196,42 +196,43 @@ namespace FormApp1
 
                 /////////////////////////////////////////////////////////////////////////////////////////////////////
                 // 우측하단 Spline Chart에 데이터 표현
-                Series seriesSpl_1GKE = new Series() {
-                    ChartType = SeriesChartType.Spline,
-                    MarkerStyle = MarkerStyle.Circle,
-                    BorderWidth = 3,
-                };
-                Series seriesSpl_2BQ = new Series()
+                Series seriesSpl_1GKE = new Series("Google Kubernetes Engine")
                 {
                     ChartType = SeriesChartType.Spline,
                     MarkerStyle = MarkerStyle.Circle,
                     BorderWidth = 3,
                 };
-                Series seriesSpl_3BQS = new Series()
+                Series seriesSpl_2BQ = new Series("Google BigQuery API")
                 {
                     ChartType = SeriesChartType.Spline,
                     MarkerStyle = MarkerStyle.Circle,
                     BorderWidth = 3,
                 };
-                Series seriesSpl_4GAE = new Series()
+                Series seriesSpl_3BQS = new Series("Google BigQuery Streaming API")
                 {
                     ChartType = SeriesChartType.Spline,
                     MarkerStyle = MarkerStyle.Circle,
                     BorderWidth = 3,
                 };
-                Series seriesSpl_5IAM = new Series()
+                Series seriesSpl_4GAE = new Series("Google App Engine")
                 {
                     ChartType = SeriesChartType.Spline,
                     MarkerStyle = MarkerStyle.Circle,
                     BorderWidth = 3,
                 };
-                Series seriesSpl_6GWS = new Series()
+                Series seriesSpl_5IAM = new Series("Google Iam - admin Service Accounts")
                 {
                     ChartType = SeriesChartType.Spline,
                     MarkerStyle = MarkerStyle.Circle,
                     BorderWidth = 3,
                 };
-                
+                Series seriesSpl_6GWS = new Series("Google Workspace")
+                {
+                    ChartType = SeriesChartType.Spline,
+                    MarkerStyle = MarkerStyle.Circle,
+                    BorderWidth = 3,
+                };
+
                 // Series 데이터 설정
                 if (dt_Spline != null)
                 {
@@ -260,13 +261,18 @@ namespace FormApp1
                 //seriesSpl1.Points.AddXY("2023-01-03", 45);
                 //seriesSpl1.Points.AddXY("2023-01-04", 39);
                 //seriesSpl1.Points.AddXY("2023-01-05", 31);
-                
+
                 chartSpline.Series.Add(seriesSpl_1GKE);
                 chartSpline.Series.Add(seriesSpl_2BQ);
                 chartSpline.Series.Add(seriesSpl_3BQS);
                 chartSpline.Series.Add(seriesSpl_4GAE);
                 chartSpline.Series.Add(seriesSpl_5IAM);
                 chartSpline.Series.Add(seriesSpl_6GWS);
+
+                chartSpline.Legends.Clear();
+
+                //foreach (var legend in chartStackedColumn.Legends)
+                //    legend.Font = new Font("Consolas", 12);
 
                 //foreach (var series in chartSpline.Series)
                 //    series.Color = Color.FromArgb(128, series.Color.R, series.Color.G, series.Color.B);
@@ -286,6 +292,13 @@ namespace FormApp1
                 if (!btnSearch.Focused)
                     btnSearch.Focus();
             }
+        }
+
+        private void btnTestForm_Click(object sender, EventArgs e)
+        {
+            frmTest1 frm = new frmTest1();
+
+            frm.Show();
         }
     }
 }

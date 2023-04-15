@@ -96,7 +96,7 @@ namespace FormApp1
             string host = $"http://34.64.87.33"; // Google Cloud Compute Engine
 
             string url = $"{host}/bigquery/v2/projects/{_projectId}/queries?location={_location}";
-            
+
             #region (주석 처리) service_account_key.json
             //string jsonPath = @"path/to/service_account_key.json";
             //string json = File.ReadAllText(jsonPath);
@@ -104,13 +104,17 @@ namespace FormApp1
             //credential.GetAccessTokenForRequestAsync().Wait();
             #endregion
 
-            var credential = Secret.credential_SDTeam.CreateScoped("https://www.googleapis.com/auth/bigquery");
-            var token = await credential.UnderlyingCredential.GetAccessTokenForRequestAsync();
-            
-            Debug.WriteLine($"token = {token}\r\n");
+            if (string.IsNullOrEmpty(auth_token) || auth_token == string.Empty)
+            {
+                var credential = Secret.credential_SDTeam.CreateScoped("https://www.googleapis.com/auth/bigquery");
+
+                this.auth_token = await credential.UnderlyingCredential.GetAccessTokenForRequestAsync();
+
+                Debug.WriteLine($"token 발급 성공 -> {this.auth_token}\r\n");
+            }
 
             var httpReqMsg = new HttpRequestMessage(HttpMethod.Post, url);
-            httpReqMsg.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            httpReqMsg.Headers.Authorization = new AuthenticationHeaderValue("Bearer", this.auth_token);
             //httpReqMsg.Headers.Add("Host", "test.gscdn.com");
             httpReqMsg.Headers.Add("Host", "proxy.matecdn.com");
             
@@ -180,7 +184,7 @@ namespace FormApp1
                 {
                     var credential = Secret.credential_SDTeam.CreateScoped("https://www.googleapis.com/auth/bigquery");
 
-                    auth_token = await credential.UnderlyingCredential.GetAccessTokenForRequestAsync();
+                    this.auth_token = await credential.UnderlyingCredential.GetAccessTokenForRequestAsync();
 
                     Debug.WriteLine($"token 발급 성공 -> {this.auth_token}\r\n");
                 }
@@ -329,7 +333,7 @@ namespace FormApp1
                 foreach (var i in Enumerable.Range(1, 100000000))
                 {
                     var item = Items[Random.Shared.Next(0, 6)];
-                    var TranDate = DateTime.Now.AddDays(Random.Shared.Next(1, 100) * -1);
+                    var TranDate = DateTime.Now.AddDays(Random.Shared.Next(1, 21) * -1);
 
                     BigQueryInsertRow row = new BigQueryInsertRow(insertId: $"row{i}");
                     row.Add("TranDate", TranDate.ToString("yyyy-MM-dd"));
@@ -351,8 +355,9 @@ namespace FormApp1
                     row.Add("CreateId", UserIds[Random.Shared.Next(0, 4)]);
 
                     insert_rows.Add(row);
-                    
-                    if (i % Random.Shared.Next(100, 150) == 0)
+
+                    //if (i % Random.Shared.Next(100, 150) == 0)
+                    if (i % 200 == 0)
                     {
                         client.InsertRows(this._datasetId, this._tableId, insert_rows);
 

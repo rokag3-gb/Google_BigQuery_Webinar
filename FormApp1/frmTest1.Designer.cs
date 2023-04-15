@@ -84,7 +84,7 @@
             dataGridView1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataGridView1.BackgroundColor = SystemColors.Control;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(530, 484);
+            dataGridView1.Location = new Point(898, 484);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.ReadOnly = true;
             dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
@@ -102,7 +102,7 @@
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
             dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle2;
             dataGridView1.RowTemplate.Height = 29;
-            dataGridView1.Size = new Size(1150, 491);
+            dataGridView1.Size = new Size(782, 312);
             dataGridView1.TabIndex = 4;
             // 
             // chart1
@@ -118,7 +118,7 @@
             series1.Legend = "Legend1";
             series1.Name = "SeriesDoughnut";
             chart1.Series.Add(series1);
-            chart1.Size = new Size(501, 347);
+            chart1.Size = new Size(502, 332);
             chart1.TabIndex = 5;
             chart1.Text = "chart1asd";
             chart1.TextAntiAliasingQuality = System.Windows.Forms.DataVisualization.Charting.TextAntiAliasingQuality.Normal;
@@ -144,11 +144,12 @@
             // 
             // txtResponse
             // 
-            txtResponse.Location = new Point(23, 499);
+            txtResponse.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            txtResponse.Location = new Point(23, 484);
             txtResponse.Multiline = true;
             txtResponse.Name = "txtResponse";
             txtResponse.ScrollBars = ScrollBars.Both;
-            txtResponse.Size = new Size(488, 476);
+            txtResponse.Size = new Size(869, 312);
             txtResponse.TabIndex = 7;
             // 
             // txtLoopCount
@@ -156,16 +157,16 @@
             txtLoopCount.Font = new Font("Cascadia Code", 10.2F, FontStyle.Bold, GraphicsUnit.Point);
             txtLoopCount.Location = new Point(304, 53);
             txtLoopCount.Name = "txtLoopCount";
-            txtLoopCount.Size = new Size(91, 27);
+            txtLoopCount.Size = new Size(125, 27);
             txtLoopCount.TabIndex = 8;
-            txtLoopCount.Text = "100";
+            txtLoopCount.Text = "1000000";
             txtLoopCount.TextAlign = HorizontalAlignment.Right;
             // 
             // frmTest1
             // 
             AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1692, 987);
+            ClientSize = new Size(1692, 808);
             Controls.Add(txtLoopCount);
             Controls.Add(txtResponse);
             Controls.Add(chart2);

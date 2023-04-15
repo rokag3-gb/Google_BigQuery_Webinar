@@ -39,6 +39,7 @@
             System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
             tableLayoutPanel1 = new TableLayoutPanel();
             groupBox1 = new GroupBox();
+            btnTestForm = new Button();
             panel6 = new Panel();
             label6 = new Label();
             cboHost = new ComboBox();
@@ -50,10 +51,12 @@
             label1 = new Label();
             cboYear = new ComboBox();
             tableLayoutPanel2 = new TableLayoutPanel();
+            panel7 = new Panel();
             panel5 = new Panel();
             txtTopSellingProduct = new TextBox();
             label5 = new Label();
             panel4 = new Panel();
+            label8 = new Label();
             txtTotalNumberOfSales = new TextBox();
             label4 = new Label();
             panel3 = new Panel();
@@ -64,8 +67,6 @@
             tableLayoutPanel4 = new TableLayoutPanel();
             chartSpline = new System.Windows.Forms.DataVisualization.Charting.Chart();
             chartStackedColumn = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            panel7 = new Panel();
-            label8 = new Label();
             tableLayoutPanel1.SuspendLayout();
             groupBox1.SuspendLayout();
             panel6.SuspendLayout();
@@ -103,6 +104,7 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(btnTestForm);
             groupBox1.Controls.Add(panel6);
             groupBox1.Controls.Add(btnSearch);
             groupBox1.Controls.Add(panel2);
@@ -114,6 +116,18 @@
             groupBox1.Size = new Size(1766, 113);
             groupBox1.TabIndex = 1;
             groupBox1.TabStop = false;
+            // 
+            // btnTestForm
+            // 
+            btnTestForm.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnTestForm.Font = new Font("Cascadia Code", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            btnTestForm.Location = new Point(1556, 24);
+            btnTestForm.Name = "btnTestForm";
+            btnTestForm.Size = new Size(201, 79);
+            btnTestForm.TabIndex = 5;
+            btnTestForm.Text = "Test Form";
+            btnTestForm.UseVisualStyleBackColor = true;
+            btnTestForm.Click += btnTestForm_Click;
             // 
             // panel6
             // 
@@ -246,6 +260,15 @@
             tableLayoutPanel2.Size = new Size(1766, 166);
             tableLayoutPanel2.TabIndex = 5;
             // 
+            // panel7
+            // 
+            panel7.BackColor = Color.White;
+            panel7.Dock = DockStyle.Fill;
+            panel7.Location = new Point(1346, 3);
+            panel7.Name = "panel7";
+            panel7.Size = new Size(417, 160);
+            panel7.TabIndex = 7;
+            // 
             // panel5
             // 
             panel5.BackColor = Color.White;
@@ -289,6 +312,16 @@
             panel4.Name = "panel4";
             panel4.Size = new Size(356, 160);
             panel4.TabIndex = 5;
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Font = new Font("Cascadia Code", 10.2F, FontStyle.Regular, GraphicsUnit.Point);
+            label8.Location = new Point(18, 43);
+            label8.Name = "label8";
+            label8.Size = new Size(150, 22);
+            label8.TabIndex = 4;
+            label8.Text = "(record count)";
             // 
             // txtTotalNumberOfSales
             // 
@@ -389,8 +422,8 @@
             tableLayoutPanel4.Margin = new Padding(0);
             tableLayoutPanel4.Name = "tableLayoutPanel4";
             tableLayoutPanel4.RowCount = 2;
-            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 44.72574F));
-            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 55.27426F));
+            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 56.7757F));
+            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 43.2243F));
             tableLayoutPanel4.Size = new Size(971, 428);
             tableLayoutPanel4.TabIndex = 1;
             // 
@@ -401,13 +434,13 @@
             chartSpline.Dock = DockStyle.Fill;
             legend2.Name = "Legend1";
             chartSpline.Legends.Add(legend2);
-            chartSpline.Location = new Point(3, 194);
+            chartSpline.Location = new Point(3, 246);
             chartSpline.Name = "chartSpline";
             series2.ChartArea = "ChartArea1";
             series2.Legend = "Legend1";
             series2.Name = "Series1";
             chartSpline.Series.Add(series2);
-            chartSpline.Size = new Size(965, 231);
+            chartSpline.Size = new Size(965, 179);
             chartSpline.TabIndex = 2;
             chartSpline.TabStop = false;
             chartSpline.Text = "chart1";
@@ -425,29 +458,10 @@
             series3.Legend = "Legend1";
             series3.Name = "Series1";
             chartStackedColumn.Series.Add(series3);
-            chartStackedColumn.Size = new Size(965, 185);
+            chartStackedColumn.Size = new Size(965, 237);
             chartStackedColumn.TabIndex = 1;
             chartStackedColumn.TabStop = false;
             chartStackedColumn.Text = "chart1";
-            // 
-            // panel7
-            // 
-            panel7.BackColor = Color.White;
-            panel7.Dock = DockStyle.Fill;
-            panel7.Location = new Point(1346, 3);
-            panel7.Name = "panel7";
-            panel7.Size = new Size(417, 160);
-            panel7.TabIndex = 7;
-            // 
-            // label8
-            // 
-            label8.AutoSize = true;
-            label8.Font = new Font("Cascadia Code", 10.2F, FontStyle.Regular, GraphicsUnit.Point);
-            label8.Location = new Point(18, 43);
-            label8.Name = "label8";
-            label8.Size = new Size(150, 22);
-            label8.TabIndex = 4;
-            label8.Text = "(record count)";
             // 
             // frmReportOLAP_BigQuery
             // 
@@ -517,5 +531,6 @@
         private System.Windows.Forms.DataVisualization.Charting.Chart chartSpline;
         private Panel panel7;
         private Label label8;
+        private Button btnTestForm;
     }
 }
