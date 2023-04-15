@@ -161,7 +161,7 @@
             txtLoopCount.Text = "100";
             txtLoopCount.TextAlign = HorizontalAlignment.Right;
             // 
-            // Form1
+            // frmTest1
             // 
             AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -174,7 +174,7 @@
             Controls.Add(btnExecuteQuery);
             Controls.Add(btnInsert);
             Controls.Add(btn조회);
-            Name = "Form1";
+            Name = "frmTest1";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Form1";
             Load += Form1_Load;

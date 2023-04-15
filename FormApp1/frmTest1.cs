@@ -13,68 +13,86 @@ namespace FormApp1
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            // Doughnut chart
+
             Series doughnutSeries = new Series("Doughnut");
             doughnutSeries.ChartType = SeriesChartType.Doughnut;
 
-            doughnutSeries.Points.Add(new DataPoint(0, new double[] { 20, 90 }) { LegendText = "BigQuery" });
-            doughnutSeries.Points.Add(new DataPoint(1, new double[] { 30, 370 }) { LegendText = "GCS" });
-            doughnutSeries.Points.Add(new DataPoint(2, new double[] { 40, 180 }) { LegendText = "GCE" });
+            // Dummy data
+            doughnutSeries.Points.Add(new DataPoint(0, new double[] { 370 }) { LegendText = "GKE" });
+            doughnutSeries.Points.Add(new DataPoint(1, new double[] { 260 }) { LegendText = "BigQuery API" });
+            doughnutSeries.Points.Add(new DataPoint(2, new double[] { 180 }) { LegendText = "BigQuery Streaming API" });
+            doughnutSeries.Points.Add(new DataPoint(3, new double[] { 165 }) { LegendText = "App Engine" });
+            doughnutSeries.Points.Add(new DataPoint(4, new double[] { 70 }) { LegendText = "Iam-admin Service Accounts" });
+            doughnutSeries.Points.Add(new DataPoint(5, new double[] { 30 }) { LegendText = "GWS" });
 
             doughnutSeries.Points[0].Font = new Font("Consolas", 14);
-            doughnutSeries.Points[0].Label = "BigQuery " + doughnutSeries.Points[0].YValues[1].ToString();
+            doughnutSeries.Points[0].Label = "BigQuery " + doughnutSeries.Points[0].YValues[0].ToString();
             doughnutSeries.Points[0].LabelForeColor = Color.White;
 
             chart1.Series.Add(doughnutSeries);
 
             ///////////////////////////////////////////////////
 
+            // StackedColumn chart
             // Series 생성
-            var series1 = new Series("Series 1") { LegendText = "BQ" }; series1.ChartType = SeriesChartType.StackedColumn;
-            var series2 = new Series("Series 2") { LegendText = "GCS" }; series2.ChartType = SeriesChartType.StackedColumn;
-            var series3 = new Series("Series 3") { LegendText = "GCE" }; series3.ChartType = SeriesChartType.StackedColumn;
+            var series1 = new Series("Series 1") { LegendText = "BQ" };
+            series1.ChartType = SeriesChartType.StackedColumn;
+            series1.Points.AddXY("202301", 10);
+            series1.Points.AddXY("202302", 20);
+            series1.Points.AddXY("202303", 30);
+
+            var series2 = new Series("Series 2") { LegendText = "GCS" };
+            series2.ChartType = SeriesChartType.StackedColumn;
+            series2.Points.AddXY("202301", 7);
+            series2.Points.AddXY("202302", 9);
+            series2.Points.AddXY("202303", 4);
+
+            var series3 = new Series("Series 3") { LegendText = "GCE" };
+            series3.ChartType = SeriesChartType.StackedColumn;
+            series3.Points.AddXY("202301", 14);
+            series3.Points.AddXY("202302", 12);
+            series3.Points.AddXY("202303", 7);
 
             // 데이터 추가
-            series1.Points.Add(10);
-            series1.Points.Add(20);
-            series1.Points.Add(30);
+            //series1.Points.Add(10);
+            //series1.Points.Add(20);
+            //series1.Points.Add(30);
 
-            series2.Points.Add(20);
-            series2.Points.Add(30);
-            series2.Points.Add(40);
+            //series2.Points.Add(20);
+            //series2.Points.Add(30);
+            //series2.Points.Add(40);
 
-            series3.Points.Add(30);
-            series3.Points.Add(40);
-            series3.Points.Add(50);
+            //series3.Points.Add(30);
+            //series3.Points.Add(40);
+            //series3.Points.Add(50);
 
             // Series를 Chart에 추가
             chart2.Series.Add(series1);
             chart2.Series.Add(series2);
             chart2.Series.Add(series3);
 
-            // Chart 컨트롤에 레전드 추가
-            //Legend legend = new Legend();
-            //chart1.Legends.Add(legend);
+            ///////////////////////////////////////////////////
 
-            // 각 레전드에 라벨 추가
-            //for (int i = 0; i < doughnutSeries.Points.Count; i++)
-            //{
-            //    string labelText = doughnutSeries.Points[i].LegendText;
+            // Column chart
 
-            //    LegendItem legendItem = new LegendItem(labelText, Color.Transparent, Application.StartupPath + "\\dh.png");
+            // Chart Area 설정
+            //ChartArea chartArea = new ChartArea();
+            //chartArea.AxisX.Title = "Month";
+            //chartArea.AxisY.Title = "Value";
+            //chart2.ChartAreas.Add(chartArea);
 
-            //    legendItem.Cells.Add(new LegendCell(LegendCellType.SeriesSymbol, "", ContentAlignment.MiddleCenter));
-            //    legendItem.Cells.Add(new LegendCell(LegendCellType.Text, labelText, ContentAlignment.MiddleLeft));
-            //    legend.CustomItems.Add(legendItem);
-            //}
+            //// Series 설정
+            //Series series = new Series();
+            //series.ChartType = SeriesChartType.Column;
+            //series.Name = "MySeries";
 
-            //chart1.Series.Clear();
-            //chart1.Series["SeriesDoughnut"].Points.Add(10);
-            //chart1.Series["SeriesDoughnut"].Points.Add(20);
-            //chart1.Series["SeriesDoughnut"].Points.Add(30);
-            //chart1.Series["SeriesDoughnut"].Points.Add(40);
-            //chart1.Series["SeriesDoughnut"].Points.Add(50);
-            //chart1.Series["SeriesDoughnut"].Points.Add(25);
-            //chart1.Show();
+            //// 데이터 설정
+            //series.Points.AddXY("202301", 1, 2, 3, 4, 5, 6);
+            //series.Points.AddXY("202302", 2, 4, 6, 8, 10, 12);
+            //series.Points.AddXY("202303", 3, 6, 9, 12, 15, 18);
+
+            //chart2.Series.Add(series);
         }
 
         private async void btnExecuteQuery_Click(object sender, EventArgs e)
