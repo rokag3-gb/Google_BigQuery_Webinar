@@ -1,6 +1,7 @@
 using System.Data;
 using System.Diagnostics;
 using System.Windows.Forms.DataVisualization.Charting;
+using static System.Windows.Forms.DataFormats;
 
 namespace FormApp1
 {
@@ -97,7 +98,7 @@ namespace FormApp1
 
         private async void btnExecuteQuery_Click(object sender, EventArgs e)
         {
-            dataGridView1.DataSource = null;
+            //dataGridView1.DataSource = null;
 
             BigQueryHttpClient client = new BigQueryHttpClient(
                 projectId: "cloudmate-sdteam"
@@ -111,39 +112,48 @@ namespace FormApp1
             //string host = $"http://34.64.87.33"; // CacheCat on Google Compute Engine
             //string host = $"http://20.196.221.189"; // Azure VM
             string TranDate = "";
+            string limit = "";
             string query = "";
 
             string response;
 
             foreach (var i in Enumerable.Range(1, loopCount))
             {
-                TranDate = DateTime.Now.AddDays(Random.Shared.Next(1, 40) * -1).ToString("yyyy-MM-dd");
+                Stopwatch stopwatch = Stopwatch.StartNew();
+                
+                //txtResponse.Text += "--- HttpRequest Start ---\r\n";
 
-                query = $"select DealId, TranDate, DealKind"
-                                + $", AccountId, ManagerId"
-                                + $", Item, IsCancel"
-                                + $", Amount, Tax, Total, Paid, Balance"
+                TranDate = DateTime.Now.AddDays(Random.Shared.Next(1, 40) * -1).ToString("yyyy-MM-dd");
+                limit = Random.Shared.Next(1, 10).ToString();
+
+                query = $"select DealId, TranDate, DealKind, AccountId, ManagerId"
+                                + $", Item, IsCancel, Amount, Tax, Total, Paid, Balance"
                                 //+ $", ContId"
-                                + $", IsInvoice"
-                                + $", InvoiceMonth"
-                                + $", Note"
-                                + $", BillInfo"
-                            //+ $", CreateDate"
-                            //+ $", CreateId"
-                            //+ $", ModifyDate"
-                            //+ $", ModifyId"
+                                + $", IsInvoice, InvoiceMonth, Note, BillInfo"
+                                //+ $", CreateDate"
+                                //+ $", CreateId"
+                                //+ $", ModifyDate"
+                                //+ $", ModifyId"
                             + $" from `cloudmate-sdteam.ds01.Deal`"
-                            + $" where TranDate between Date(\"{TranDate}\") and date(\"{DateTime.Now.ToString("yyyy-MM-dd")}\");";
+                            + $" where TranDate between Date(\"{TranDate}\") and date(\"{DateTime.Now.ToString("yyyy-MM-dd")}\")"
+                            + $" limit {limit};";
 
                 response = await client.HttpRequestQueryAsync(host, query);
 
                 if (i % 10 == 0)
                     Application.DoEvents();
 
-                txtResponse.Text += "-------------------------\r\n" + response;
+                if (i % 2000 == 0)
+                    txtResponse.Text = "";
+
+                stopwatch.Stop();
+                TimeSpan ts = stopwatch.Elapsed;
+                
+                txtResponse.Text = $"HttpRequestQueryAsync Completed. response.Length = {response.Length}, Elapsed = {ts.ToString(@"hh\:mm\:ss\.fffffff")}\r\n" + txtResponse.Text;
+                //txtResponse.Text += "--- HttpRequest Completed ---\r\n";
             }
 
-            DataTable dt = null;
+            //DataTable dt = null;
 
             //dataGridView1.DataSource = dt;
             //dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);

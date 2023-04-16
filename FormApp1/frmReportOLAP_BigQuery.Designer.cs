@@ -99,7 +99,7 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 119F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 172F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 74.43299F));
-            tableLayoutPanel1.Size = new Size(1788, 741);
+            tableLayoutPanel1.Size = new Size(1788, 988);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // groupBox1
@@ -390,7 +390,7 @@
             tableLayoutPanel3.Name = "tableLayoutPanel3";
             tableLayoutPanel3.RowCount = 1;
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel3.Size = new Size(1766, 428);
+            tableLayoutPanel3.Size = new Size(1766, 675);
             tableLayoutPanel3.TabIndex = 6;
             // 
             // chartDoughtnut
@@ -406,7 +406,7 @@
             series1.Legend = "Legend1";
             series1.Name = "Series1";
             chartDoughtnut.Series.Add(series1);
-            chartDoughtnut.Size = new Size(789, 422);
+            chartDoughtnut.Size = new Size(789, 669);
             chartDoughtnut.TabIndex = 0;
             chartDoughtnut.TabStop = false;
             chartDoughtnut.Text = "chart1";
@@ -424,7 +424,7 @@
             tableLayoutPanel4.RowCount = 2;
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 56.7757F));
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 43.2243F));
-            tableLayoutPanel4.Size = new Size(971, 428);
+            tableLayoutPanel4.Size = new Size(971, 675);
             tableLayoutPanel4.TabIndex = 1;
             // 
             // chartSpline
@@ -434,13 +434,13 @@
             chartSpline.Dock = DockStyle.Fill;
             legend2.Name = "Legend1";
             chartSpline.Legends.Add(legend2);
-            chartSpline.Location = new Point(3, 246);
+            chartSpline.Location = new Point(3, 386);
             chartSpline.Name = "chartSpline";
             series2.ChartArea = "ChartArea1";
             series2.Legend = "Legend1";
             series2.Name = "Series1";
             chartSpline.Series.Add(series2);
-            chartSpline.Size = new Size(965, 179);
+            chartSpline.Size = new Size(965, 286);
             chartSpline.TabIndex = 2;
             chartSpline.TabStop = false;
             chartSpline.Text = "chart1";
@@ -458,7 +458,7 @@
             series3.Legend = "Legend1";
             series3.Name = "Series1";
             chartStackedColumn.Series.Add(series3);
-            chartStackedColumn.Size = new Size(965, 237);
+            chartStackedColumn.Size = new Size(965, 377);
             chartStackedColumn.TabIndex = 1;
             chartStackedColumn.TabStop = false;
             chartStackedColumn.Text = "chart1";
@@ -467,7 +467,7 @@
             // 
             AutoScaleDimensions = new SizeF(13F, 30F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1788, 741);
+            ClientSize = new Size(1788, 988);
             Controls.Add(tableLayoutPanel1);
             Font = new Font("Cascadia Code", 13.8F, FontStyle.Regular, GraphicsUnit.Point);
             Margin = new Padding(4);

@@ -63,31 +63,31 @@ namespace FormApp1
                 client = new BigQueryHttpClient(projectId: "cloudmate-sdteam", datasetId: "ds01", location: "asia-northeast3");
 
                 /////////////////////////////////////////////////////////////////////////////////////////////////////
-                // 상단 Total Namecard에 표현할 데이터 가져오기
-                query = "select\t(\r\n\tselect\tsum(Amount)\r\n\tfrom\tds01.Deal\r\n\twhere\tTranDate between '2023-01-01' and '2023-03-31'\r\n\tand\tDealKind = '매출'\r\n\tand\tIsCancel = false\r\n\t) as TotalSales\r\n\t, (\r\n\tselect\tcount(DealId)\r\n\tfrom\tds01.Deal\r\n\twhere\tTranDate between '2023-01-01' and '2023-03-31'\r\n\tand\tDealKind = '매출'\r\n\tand\tIsCancel = false\r\n\t) as TotalNumberOfSales\r\n\t, (\r\n\tselect\ttop.Item\r\n\tfrom\t(\r\n\t\tselect\tItem\r\n\t\t\t, sum(Amount)\r\n\t\tfrom\tds01.Deal\r\n\t\twhere\tTranDate between '2023-01-01' and '2023-03-31'\r\n\t\tand\tDealKind = '매출'\r\n\t\tand\tIsCancel = false\r\n\t\tgroup by Item\r\n\t\torder by 2 desc\r\n\t\tlimit 1\r\n\t\t) top\r\n\t) as TopSellingProduct\r\n;";
+                // Query[0] 상단 Total Namecard에 표현할 데이터 가져오기
+                query = "select\t(\r\n\tselect\tsum(Amount)\r\n\tfrom\tds01.Deal\r\n\twhere\tTranDate between '2023-01-01' and '2023-03-31'\r\n\tand\tDealKind = '매출'\r\n\tand\tIsCancel = false\r\n\t) as TotalSales\r\n\t, (\r\n\tselect\tcount(DealId)\r\n\tfrom\tds01.Deal\r\n\twhere\tTranDate between '2023-01-01' and '2023-03-31'\r\n\tand\tDealKind = '매출'\r\n\tand\tIsCancel = false\r\n\t) as TotalNumberOfSales\r\n\t, (\r\n\tselect\ttop.Item\r\n\tfrom\t(\r\n\t\tselect\tItem\r\n\t\t\t, sum(Amount)\r\n\t\tfrom\tds01.Deal\r\n\t\twhere\tTranDate between '2023-01-01' and '2023-03-31'\r\n\t\tand\tDealKind = '매출'\r\n\t\tand\tIsCancel = false\r\n\t\tgroup by Item\r\n\t\torder by 2 desc\r\n\t\tlimit 1\r\n\t\t) top\r\n\t) as TopSellingProduct\r\n\t, case when RAND() > 0 then 1 else 0 end as rnd;";
 
                 response = await client.HttpRequestQueryAsync(host, query);
                 var dt_total = client.ParseToDataTable(response);
 
                 /////////////////////////////////////////////////////////////////////////////////////////////////////
-                // 좌측 Doughnut Chart에 표현할 데이터 가져오기
-                query = "select\tItem\r\n\t, sum(Amount) as TotalAmount\r\n\t, sum(Amount)\r\n\t/\r\n\t(\r\n\tselect\tsum(Amount)\r\n\tfrom\tds01.Deal\r\n\twhere\tTranDate between '2023-01-01' and '2023-03-31'\r\n\tand\tDealKind = '매출'\r\n\tand\tIsCancel = false\r\n\t) as Percent\r\nfrom\tds01.Deal\r\nwhere\tTranDate between '2023-01-01' and '2023-03-31'\r\nand\tDealKind = '매출'\r\nand\tIsCancel = false\r\ngroup by Item\r\norder by 2 desc;";
+                // Query[1] 좌측 Doughnut Chart에 표현할 데이터 가져오기
+                query = "select\tItem\r\n\t, sum(Amount) as TotalAmount\r\n\t, sum(Amount)\r\n\t/\r\n\t(\r\n\tselect\tsum(Amount)\r\n\tfrom\tds01.Deal\r\n\twhere\tTranDate between '2023-01-01' and '2023-03-31'\r\n\tand\tDealKind = '매출'\r\n\tand\tIsCancel = false\r\n\t) as Percent\r\n\t, case when RAND() > 0 then 1 else 0 end as rnd\r\nfrom\tds01.Deal\r\nwhere\tTranDate between '2023-01-01' and '2023-03-31'\r\nand\tDealKind = '매출'\r\nand\tIsCancel = false\r\ngroup by Item\r\norder by 2 desc;";
 
                 response = await client.HttpRequestQueryAsync(host, query);
 
                 var dt_2 = client.ParseToDataTable(response);
 
                 /////////////////////////////////////////////////////////////////////////////////////////////////////
-                // 우측상단 StackedColumn Chart에 표현할 데이터 가져오기
-                query = "select\ta.TranYearMonth\r\n\t, (\r\n\tselect\tsum(Amount)\r\n\tfrom\tds01.Deal\r\n\twhere\tcast((extract(year from TranDate) * 100 + extract(month from TranDate)) as string) = a.TranYearMonth\r\n\tand\tTranDate is not null\r\n\tand\tDealKind = '매출'\r\n\tand\tIsCancel = false\r\n\tand\tItem = 'Google Kubernetes Engine'\r\n\t) as Value1\r\n\t, (\r\n\tselect\tsum(Amount)\r\n\tfrom\tds01.Deal\r\n\twhere\tcast((extract(year from TranDate) * 100 + extract(month from TranDate)) as string) = a.TranYearMonth\r\n\tand\tTranDate is not null\r\n\tand\tDealKind = '매출'\r\n\tand\tIsCancel = false\r\n\tand\tItem = 'Google BigQuery API'\r\n\t) as Value2\r\n\t, (\r\n\tselect\tsum(Amount)\r\n\tfrom\tds01.Deal\r\n\twhere\tcast((extract(year from TranDate) * 100 + extract(month from TranDate)) as string) = a.TranYearMonth\r\n\tand\tTranDate is not null\r\n\tand\tDealKind = '매출'\r\n\tand\tIsCancel = false\r\n\tand\tItem = 'Google BigQuery Streaming API'\r\n\t) as Value3\r\n\t, (\r\n\tselect\tsum(Amount)\r\n\tfrom\tds01.Deal\r\n\twhere\tcast((extract(year from TranDate) * 100 + extract(month from TranDate)) as string) = a.TranYearMonth\r\n\tand\tTranDate is not null\r\n\tand\tDealKind = '매출'\r\n\tand\tIsCancel = false\r\n\tand\tItem = 'Google App Engine'\r\n\t) as Value4\r\n\t, (\r\n\tselect\tsum(Amount)\r\n\tfrom\tds01.Deal\r\n\twhere\tcast((extract(year from TranDate) * 100 + extract(month from TranDate)) as string) = a.TranYearMonth\r\n\tand\tTranDate is not null\r\n\tand\tDealKind = '매출'\r\n\tand\tIsCancel = false\r\n\tand\tItem = 'Google Iam-admin Service Accounts'\r\n\t) as Value5\r\n\t, (\r\n\tselect\tsum(Amount)\r\n\tfrom\tds01.Deal\r\n\twhere\tcast((extract(year from TranDate) * 100 + extract(month from TranDate)) as string) = a.TranYearMonth\r\n\tand\tTranDate is not null\r\n\tand\tDealKind = '매출'\r\n\tand\tIsCancel = false\r\n\tand\tItem = 'Google Workspace'\r\n\t) as Value6\r\nfrom\t(\r\n\tselect\tcast((extract(year from TranDate) * 100 + extract(month from TranDate)) as string) as TranYearMonth\r\n\tfrom\tds01.Deal\r\n\twhere\tTranDate between '2023-01-01' and '2023-03-31'\r\n\tand\tDealKind = '매출'\r\n\tand\tIsCancel = false\r\n\tgroup by cast((extract(year from TranDate) * 100 + extract(month from TranDate)) as string)\r\n\t) a\r\norder by 1;";
+                // Query[2] 우측상단 StackedColumn Chart에 표현할 데이터 가져오기
+                query = "select\ta.TranYearMonth\r\n\t, (\r\n\tselect\tsum(Amount)\r\n\tfrom\tds01.Deal\r\n\twhere\tcast((extract(year from TranDate) * 100 + extract(month from TranDate)) as string) = a.TranYearMonth\r\n\tand\tTranDate is not null\r\n\tand\tDealKind = '매출'\r\n\tand\tIsCancel = false\r\n\tand\tItem = 'Google Kubernetes Engine'\r\n\t) as Value1\r\n\t, (\r\n\tselect\tsum(Amount)\r\n\tfrom\tds01.Deal\r\n\twhere\tcast((extract(year from TranDate) * 100 + extract(month from TranDate)) as string) = a.TranYearMonth\r\n\tand\tTranDate is not null\r\n\tand\tDealKind = '매출'\r\n\tand\tIsCancel = false\r\n\tand\tItem = 'Google BigQuery API'\r\n\t) as Value2\r\n\t, (\r\n\tselect\tsum(Amount)\r\n\tfrom\tds01.Deal\r\n\twhere\tcast((extract(year from TranDate) * 100 + extract(month from TranDate)) as string) = a.TranYearMonth\r\n\tand\tTranDate is not null\r\n\tand\tDealKind = '매출'\r\n\tand\tIsCancel = false\r\n\tand\tItem = 'Google BigQuery Streaming API'\r\n\t) as Value3\r\n\t, (\r\n\tselect\tsum(Amount)\r\n\tfrom\tds01.Deal\r\n\twhere\tcast((extract(year from TranDate) * 100 + extract(month from TranDate)) as string) = a.TranYearMonth\r\n\tand\tTranDate is not null\r\n\tand\tDealKind = '매출'\r\n\tand\tIsCancel = false\r\n\tand\tItem = 'Google App Engine'\r\n\t) as Value4\r\n\t, (\r\n\tselect\tsum(Amount)\r\n\tfrom\tds01.Deal\r\n\twhere\tcast((extract(year from TranDate) * 100 + extract(month from TranDate)) as string) = a.TranYearMonth\r\n\tand\tTranDate is not null\r\n\tand\tDealKind = '매출'\r\n\tand\tIsCancel = false\r\n\tand\tItem = 'Google Iam-admin Service Accounts'\r\n\t) as Value5\r\n\t, (\r\n\tselect\tsum(Amount)\r\n\tfrom\tds01.Deal\r\n\twhere\tcast((extract(year from TranDate) * 100 + extract(month from TranDate)) as string) = a.TranYearMonth\r\n\tand\tTranDate is not null\r\n\tand\tDealKind = '매출'\r\n\tand\tIsCancel = false\r\n\tand\tItem = 'Google Workspace'\r\n\t) as Value6\r\n\t, case when RAND() > 0 then 1 else 0 end as rnd\r\nfrom\t(\r\n\tselect\tcast((extract(year from TranDate) * 100 + extract(month from TranDate)) as string) as TranYearMonth\r\n\tfrom\tds01.Deal\r\n\twhere\tTranDate between '2023-01-01' and '2023-03-31'\r\n\tand\tDealKind = '매출'\r\n\tand\tIsCancel = false\r\n\tgroup by cast((extract(year from TranDate) * 100 + extract(month from TranDate)) as string)\r\n\t) a\r\norder by 1;";
 
                 response = await client.HttpRequestQueryAsync(host, query);
 
                 var dt_StackedColumn = client.ParseToDataTable(response);
 
                 /////////////////////////////////////////////////////////////////////////////////////////////////////
-                // 우측하단 Spline Chart에 표현할 데이터 가져오기
-                query = "select\tTranDate\r\n\t, Item\r\n\t, sum(Amount) as Amount\r\nfrom\tds01.Deal\r\nwhere\tTranDate between '2023-01-01' and '2023-03-31'\r\nand\tDealKind = '매출'\r\nand\tIsCancel = false\r\ngroup by\r\n\tTranDate\r\n\t, Item\r\norder by TranDate, Item;";
+                // Query[3] 우측하단 Spline Chart에 표현할 데이터 가져오기
+                query = "select\tTranDate\r\n\t, Item\r\n\t, sum(Amount) as Amount\r\n\t, case when RAND() > 0 then 1 else 0 end as rnd\r\nfrom\tds01.Deal\r\nwhere\tTranDate between '2023-01-01' and '2023-03-31'\r\nand\tDealKind = '매출'\r\nand\tIsCancel = false\r\n--and\tItem = 'Google Kubernetes Engine'\r\ngroup by\r\n\tTranDate\r\n\t, Item\r\norder by TranDate, Item;";
 
                 response = await client.HttpRequestQueryAsync(host, query);
 
@@ -136,6 +136,7 @@ namespace FormApp1
                         doughnutSeries.Points[n].Label = Math.Round((Convert.ToDouble(dr["Percent"]) * 100), 2).ToString() + "%";
                         doughnutSeries.Points[n].LabelForeColor = Color.Black;
                         doughnutSeries.Points[n].LabelBackColor = Color.White;
+                        doughnutSeries.Points[n].LabelBackColor = Color.FromArgb(96, 255, 255, 255);
 
                         n++;
                     }
@@ -144,7 +145,7 @@ namespace FormApp1
                 chartDoughtnut.Series.Add(doughnutSeries);
 
                 foreach (var legend in chartDoughtnut.Legends)
-                    legend.Font = new Font("Consolas", 11);
+                    legend.Font = new Font("Consolas", 16);
 
                 /////////////////////////////////////////////////////////////////////////////////////////////////////
                 // 우측상단 StackedColumn Chart에 데이터 표현
@@ -268,6 +269,8 @@ namespace FormApp1
                 chartSpline.Series.Add(seriesSpl_4GAE);
                 chartSpline.Series.Add(seriesSpl_5IAM);
                 chartSpline.Series.Add(seriesSpl_6GWS);
+
+                chartSpline.ChartAreas[0].AxisY.LabelStyle.Format = "#,##0";
 
                 chartSpline.Legends.Clear();
 

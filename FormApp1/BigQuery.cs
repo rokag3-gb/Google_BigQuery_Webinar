@@ -83,155 +83,6 @@ namespace FormApp1
             }
         }
 
-        /// <summary>
-        /// 사용하지 말아야 함. 토큰을 계속 발급받음.
-        /// </summary>
-        /// <returns></returns>
-        public async Task<string?> HttpRequestQueryAsync()
-        {
-            Debug.WriteLine("------ 작업 시작 ------\r\n");
-
-            //string host = $"https://www.googleapis.com";
-            //string host = $"http://20.196.221.189"; // Azure VM
-            string host = $"http://34.64.87.33"; // Google Cloud Compute Engine
-
-            string url = $"{host}/bigquery/v2/projects/{_projectId}/queries?location={_location}";
-
-            #region (주석 처리) service_account_key.json
-            //string jsonPath = @"path/to/service_account_key.json";
-            //string json = File.ReadAllText(jsonPath);
-            //var credential = GoogleCredential.FromJson(json).CreateScoped("https://www.googleapis.com/auth/bigquery");
-            //credential.GetAccessTokenForRequestAsync().Wait();
-            #endregion
-
-            if (string.IsNullOrEmpty(auth_token) || auth_token == string.Empty)
-            {
-                var credential = Secret.credential_SDTeam.CreateScoped("https://www.googleapis.com/auth/bigquery");
-
-                this.auth_token = await credential.UnderlyingCredential.GetAccessTokenForRequestAsync();
-
-                Debug.WriteLine($"token 발급 성공 -> {this.auth_token}\r\n");
-            }
-
-            var httpReqMsg = new HttpRequestMessage(HttpMethod.Post, url);
-            httpReqMsg.Headers.Authorization = new AuthenticationHeaderValue("Bearer", this.auth_token);
-            //httpReqMsg.Headers.Add("Host", "test.gscdn.com");
-            httpReqMsg.Headers.Add("Host", "proxy.matecdn.com");
-            
-            //httpRequestMessage.Content = new StringContent("{ \"query\": \"select * from `cloudmate-sdteam.ds01.tb1`;\" }", Encoding.UTF8, "application/json");
-
-            var query = new
-            {
-                query = $"select DealId, TranDate, DealKind"
-                        + $", AccountId, ManagerId"
-                        + $", Item, IsCancel"
-                        + $", Amount, Tax, Total, Paid, Balance"
-                        //+ $", ContId"
-                        + $", IsInvoice"
-                        + $", InvoiceMonth"
-                        + $", Note"
-                        + $", BillInfo"
-                        //+ $", CreateDate"
-                        //+ $", CreateId"
-                        //+ $", ModifyDate"
-                        //+ $", ModifyId"
-                        + $" from `cloudmate-sdteam.{this._datasetId}.{this._tableId}`"
-                        + $" where TranDate between Date(\"2023-01-01\") and date(\"{DateTime.Now.ToString("yyyy-MM-dd")}\")"
-                        + $" limit 2;"
-                , useLegacySql = false
-            };
-            var json = JsonConvert.SerializeObject(query);
-            httpReqMsg.Content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            //var query = "select * from `cloudmate-sdteam.ds01.tb1`";
-            //var queryBody = new Dictionary<string, string>
-            //{
-            //    { "query", query }
-            //};
-            //httpRequestMessage.Content = new StringContent(queryBody.ToString(), Encoding.UTF8, "application/json");
-
-            var httpClient = new HttpClient();
-
-            // Send!!
-            var response = await httpClient.SendAsync(httpReqMsg);
-            var responseContent = await response.Content.ReadAsStringAsync();
-
-            Debug.WriteLine("------ 결과 데이터 ------\r\n");
-            Debug.WriteLine(responseContent);
-
-            //DataTable dt = ParseToDataTable(responseContent);
-            
-            Debug.WriteLine("------ 작업 완료 ------\r\n");
-
-            return responseContent;
-        }
-        
-        public async Task<string?> HttpRequestQueryAsync(string host, string query)
-        {
-            string responseContent = string.Empty;
-
-            Debug.WriteLine("------ HttpRequestQueryAsync 시작 ------\r\n");
-
-            try
-            {
-                //string host = $"https://www.googleapis.com";
-                //string host = $"http://34.64.87.33"; // CacheCat on Google Compute Engine
-                //string host = $"http://20.196.221.189"; // Azure VM
-
-                string url = $"{host}/bigquery/v2/projects/{_projectId}/queries?location={_location}";
-
-                if (string.IsNullOrEmpty(auth_token) || auth_token == string.Empty)
-                {
-                    var credential = Secret.credential_SDTeam.CreateScoped("https://www.googleapis.com/auth/bigquery");
-
-                    this.auth_token = await credential.UnderlyingCredential.GetAccessTokenForRequestAsync();
-
-                    Debug.WriteLine($"token 발급 성공 -> {this.auth_token}\r\n");
-                }
-
-                var httpReqMsg = new HttpRequestMessage(HttpMethod.Post, url);
-                httpReqMsg.Headers.Authorization = new AuthenticationHeaderValue("Bearer", this.auth_token);
-
-                if (host == "http://34.64.87.33")
-                    httpReqMsg.Headers.Add("Host", "proxy.matecdn.com");
-                else if (host == "http://20.196.221.189")
-                    httpReqMsg.Headers.Add("Host", "test.gscdn.com");
-
-                //httpRequestMessage.Content = new StringContent("{ \"query\": \"select * from `cloudmate-sdteam.ds01.tb1`;\" }", Encoding.UTF8, "application/json");
-
-                var queryBody = new
-                {
-                    query = query
-                    ,
-                    useLegacySql = false
-                };
-                var json = JsonConvert.SerializeObject(queryBody);
-                httpReqMsg.Content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                var httpClient = new HttpClient();
-
-                // Send!!
-                var response = await httpClient.SendAsync(httpReqMsg);
-                responseContent = await response.Content.ReadAsStringAsync();
-
-                //Debug.WriteLine("------ 결과 데이터 ------\r\n");
-                //Debug.WriteLine(responseContent);
-
-                //DataTable dt = ParseToDataTable(responseContent);
-
-                Debug.WriteLine("------ HttpRequestQueryAsync 완료 ------\r\n");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-            }
-
-            return responseContent;
-        }
-
         public DataTable ParseToDataTable(string data)
         {
             var dt = new DataTable();
@@ -284,6 +135,159 @@ namespace FormApp1
             }
         }
 
+        public async Task<string?> HttpRequestQueryAsync(string host, string query)
+        {
+            string responseContent = string.Empty;
+
+            Debug.WriteLine("------ HttpRequestQueryAsync 시작 ------\r\n");
+
+            try
+            {
+                //string host = $"https://www.googleapis.com";
+                //string host = $"http://34.64.87.33"; // CacheCat on Google Compute Engine
+                //string host = $"http://20.196.221.189"; // Azure VM
+
+                string url = $"{host}/bigquery/v2/projects/{_projectId}/queries?location={_location}";
+
+                if (string.IsNullOrEmpty(auth_token) || auth_token == string.Empty)
+                {
+                    var credential = Secret.credential_SDTeam.CreateScoped("https://www.googleapis.com/auth/bigquery");
+
+                    this.auth_token = await credential.UnderlyingCredential.GetAccessTokenForRequestAsync();
+
+                    Debug.WriteLine($"token 발급 성공 -> {this.auth_token}\r\n");
+                }
+
+                var httpReqMsg = new HttpRequestMessage(HttpMethod.Post, url);
+                httpReqMsg.Headers.Authorization = new AuthenticationHeaderValue("Bearer", this.auth_token);
+
+                if (host == "http://34.64.87.33")
+                    httpReqMsg.Headers.Add("Host", "proxy.matecdn.com");
+                else if (host == "http://20.196.221.189")
+                    httpReqMsg.Headers.Add("Host", "test.gscdn.com");
+
+                //httpRequestMessage.Content = new StringContent("{ \"query\": \"select * from `cloudmate-sdteam.ds01.tb1`;\" }", Encoding.UTF8, "application/json");
+
+                var queryBody = new
+                {
+                    query = query,
+                    useLegacySql = false,
+                    DisableQueryCache = true,
+                };
+                var json = JsonConvert.SerializeObject(queryBody);
+                httpReqMsg.Content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var httpClient = new HttpClient();
+
+                // Send!!
+                var response = await httpClient.SendAsync(httpReqMsg);
+                responseContent = await response.Content.ReadAsStringAsync();
+                
+                JObject jsonObject = JObject.Parse(responseContent);
+                string totalBytesProcessed = jsonObject["totalBytesProcessed"].ToString();
+                string cacheHit = jsonObject["cacheHit"].ToString();
+
+                Debug.WriteLine($"totalBytesProcessed = {totalBytesProcessed}, cacheHit = {cacheHit}");
+
+                //DataTable dt = ParseToDataTable(responseContent);
+
+                Debug.WriteLine("------ HttpRequestQueryAsync 완료 ------\r\n");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+            }
+
+            return responseContent;
+        }
+
+        /// <summary>
+        /// 사용하지 말아야 함. 토큰을 계속 발급받음.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<string?> HttpRequestQueryAsync()
+        {
+            Debug.WriteLine("------ 작업 시작 ------\r\n");
+
+            //string host = $"https://www.googleapis.com";
+            //string host = $"http://20.196.221.189"; // Azure VM
+            string host = $"http://34.64.87.33"; // Google Cloud Compute Engine
+
+            string url = $"{host}/bigquery/v2/projects/{_projectId}/queries?location={_location}";
+
+            #region (주석 처리) service_account_key.json
+            //string jsonPath = @"path/to/service_account_key.json";
+            //string json = File.ReadAllText(jsonPath);
+            //var credential = GoogleCredential.FromJson(json).CreateScoped("https://www.googleapis.com/auth/bigquery");
+            //credential.GetAccessTokenForRequestAsync().Wait();
+            #endregion
+
+            if (string.IsNullOrEmpty(auth_token) || auth_token == string.Empty)
+            {
+                var credential = Secret.credential_SDTeam.CreateScoped("https://www.googleapis.com/auth/bigquery");
+
+                this.auth_token = await credential.UnderlyingCredential.GetAccessTokenForRequestAsync();
+
+                Debug.WriteLine($"token 발급 성공 -> {this.auth_token}\r\n");
+            }
+
+            var httpReqMsg = new HttpRequestMessage(HttpMethod.Post, url);
+            httpReqMsg.Headers.Authorization = new AuthenticationHeaderValue("Bearer", this.auth_token);
+            //httpReqMsg.Headers.Add("Host", "test.gscdn.com");
+            httpReqMsg.Headers.Add("Host", "proxy.matecdn.com");
+
+            //httpRequestMessage.Content = new StringContent("{ \"query\": \"select * from `cloudmate-sdteam.ds01.tb1`;\" }", Encoding.UTF8, "application/json");
+
+            var query = new
+            {
+                query = $"select DealId, TranDate, DealKind"
+                        + $", AccountId, ManagerId"
+                        + $", Item, IsCancel"
+                        + $", Amount, Tax, Total, Paid, Balance"
+                        //+ $", ContId"
+                        + $", IsInvoice"
+                        + $", InvoiceMonth"
+                        + $", Note"
+                        + $", BillInfo"
+                        //+ $", CreateDate"
+                        //+ $", CreateId"
+                        //+ $", ModifyDate"
+                        //+ $", ModifyId"
+                        + $" from `cloudmate-sdteam.{this._datasetId}.{this._tableId}`"
+                        + $" where TranDate between Date(\"2023-01-01\") and date(\"{DateTime.Now.ToString("yyyy-MM-dd")}\")"
+                        + $" limit 2;"
+                ,
+                useLegacySql = false
+            };
+            var json = JsonConvert.SerializeObject(query);
+            httpReqMsg.Content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            //var query = "select * from `cloudmate-sdteam.ds01.tb1`";
+            //var queryBody = new Dictionary<string, string>
+            //{
+            //    { "query", query }
+            //};
+            //httpRequestMessage.Content = new StringContent(queryBody.ToString(), Encoding.UTF8, "application/json");
+
+            var httpClient = new HttpClient();
+
+            // Send!!
+            var response = await httpClient.SendAsync(httpReqMsg);
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            Debug.WriteLine("------ 결과 데이터 ------\r\n");
+            Debug.WriteLine(responseContent);
+
+            //DataTable dt = ParseToDataTable(responseContent);
+
+            Debug.WriteLine("------ 작업 완료 ------\r\n");
+
+            return responseContent;
+        }
+
         public async Task BigQueryV2SDK_ExecuteQuery()
         {
             Debug.WriteLine("------ 작업 시작 ------\r\n");
@@ -333,7 +337,9 @@ namespace FormApp1
                 foreach (var i in Enumerable.Range(1, 100000000))
                 {
                     var item = Items[Random.Shared.Next(0, 6)];
-                    var TranDate = DateTime.Now.AddDays(Random.Shared.Next(1, 21) * -1);
+                    item = Items[Random.Shared.Next(0, 2)];
+                    item = Items[3]; // "Google Kubernetes Engine"
+                    var TranDate = DateTime.Now.AddDays(Random.Shared.Next(1, 29) * -1);
 
                     BigQueryInsertRow row = new BigQueryInsertRow(insertId: $"row{i}");
                     row.Add("TranDate", TranDate.ToString("yyyy-MM-dd"));
