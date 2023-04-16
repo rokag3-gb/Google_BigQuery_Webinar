@@ -1,17 +1,11 @@
-﻿using Google.Apis.Bigquery.v2.Data;
-using System;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
-using System.Windows.Forms;
+﻿using System.Data;
 using System.Windows.Forms.DataVisualization.Charting;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace FormApp1
 {
-    public partial class frmReportOLAP_BigQuery : Form
+    public partial class frmReportOLAP : Form
     {
-        public frmReportOLAP_BigQuery()
+        public frmReportOLAP()
         {
             InitializeComponent();
         }
@@ -32,13 +26,23 @@ namespace FormApp1
 
         void DataInit()
         {
-            txtTotalSales.Text = "0";
-            txtTotalNumberOfSales.Text = "0";
+            txtTotalSales.Text = "";
+            txtTotalNumberOfSales.Text = "";
             txtTopSellingProduct.Text = "";
 
             chartDoughtnut.Series.Clear();
+            chartDoughtnut.Series.Add(new Series("Google Cloud Service 1") { ChartType = SeriesChartType.Doughnut });
+            chartDoughtnut.Palette = ChartColorPalette.Grayscale;
+
             chartStackedColumn.Series.Clear();
+            chartStackedColumn.Series.Add(new Series("Google Cloud Service 1") { ChartType = SeriesChartType.StackedColumn });
+            chartStackedColumn.Series.Add(new Series("Google Cloud Service 2") { ChartType = SeriesChartType.StackedColumn });
+            chartStackedColumn.Palette = ChartColorPalette.Grayscale;
+
             chartSpline.Series.Clear();
+            chartSpline.Series.Add(new Series("Google Cloud Service 1") { ChartType = SeriesChartType.Spline });
+            chartSpline.Series.Add(new Series("Google Cloud Service 2") { ChartType = SeriesChartType.Spline });
+            chartSpline.Palette = ChartColorPalette.Grayscale;
         }
 
         private async void btnSearch_Click(object sender, EventArgs e)
@@ -105,14 +109,21 @@ namespace FormApp1
                     {
                         DataRow dr = (DataRow)row;
 
-                        txtTotalSales.Text = string.Format("{0:#,##0}", decimal.Parse(dr["TotalSales"].ToString()));
-                        txtTotalNumberOfSales.Text = string.Format("{0:#,##0}", decimal.Parse(dr["TotalNumberOfSales"].ToString()));
+                        //txtTotalSales.Text = string.Format("{0:#,##0}", decimal.Parse(dr["TotalSales"].ToString()));
+                        //txtTotalNumberOfSales.Text = string.Format("{0:#,##0}", decimal.Parse(dr["TotalNumberOfSales"].ToString()));
+
+                        txtTotalSales.Text = Math.Round((decimal.Parse(dr["TotalSales"].ToString()) / 1000000000), 1).ToString() + " B";
+                        txtTotalNumberOfSales.Text = Math.Round(decimal.Parse(dr["TotalNumberOfSales"].ToString()) / 1000000, 1).ToString() + " M";
+
                         txtTopSellingProduct.Text = dr["TopSellingProduct"].ToString();
                     }
                 }
 
                 /////////////////////////////////////////////////////////////////////////////////////////////////////
                 // 좌측 Doughnut Chart에 데이터 표현
+                chartDoughtnut.Series.Clear();
+                chartDoughtnut.Palette = ChartColorPalette.BrightPastel;
+
                 Series doughnutSeries = new Series("Doughnut");
                 doughnutSeries.ChartType = SeriesChartType.Doughnut;
                 doughnutSeries.BorderColor = Color.Transparent;
@@ -143,12 +154,17 @@ namespace FormApp1
                 }
 
                 chartDoughtnut.Series.Add(doughnutSeries);
+                chartDoughtnut.Legends.Clear();
 
-                foreach (var legend in chartDoughtnut.Legends)
-                    legend.Font = new Font("Consolas", 16);
+                chartDoughtnut.Palette = ChartColorPalette.BrightPastel;
+
+                //foreach (var legend in chartDoughtnut.Legends)
+                //    legend.Font = new Font("Consolas", 16);
 
                 /////////////////////////////////////////////////////////////////////////////////////////////////////
                 // 우측상단 StackedColumn Chart에 데이터 표현
+                chartStackedColumn.Series.Clear();
+                chartStackedColumn.Palette = ChartColorPalette.BrightPastel;
 
                 // Series 생성
                 var series1 = new Series("Google Kubernetes Engine") { LegendText = "Google Kubernetes Engine", ChartType = SeriesChartType.StackedColumn };
@@ -189,49 +205,62 @@ namespace FormApp1
                 chartStackedColumn.Series.Add(series5);
                 chartStackedColumn.Series.Add(series6);
 
-                chartStackedColumn.ChartAreas[0].AxisY.LabelStyle.Format = "#,##0";
-                chartStackedColumn.Legends.Clear();
+                //chartStackedColumn.ChartAreas[0].AxisY.LabelStyle.Format = "#,##0";
+                chartStackedColumn.ChartAreas[0].AxisY.LabelStyle.Format = "#,##0,,,\" Billion\""; // Billion = 십억 (1,000,000,000)
+                chartStackedColumn.ChartAreas[0].AxisY.Interval = 1000000000;
+                //chartStackedColumn.Legends.Clear();
 
-                //foreach (var legend in chartStackedColumn.Legends)
-                //    legend.Font = new Font("Consolas", 12);
+                chartStackedColumn.Palette = ChartColorPalette.BrightPastel;
+
+                foreach (var legend in chartStackedColumn.Legends)
+                    legend.Font = new Font("Consolas", 17);
 
                 /////////////////////////////////////////////////////////////////////////////////////////////////////
                 // 우측하단 Spline Chart에 데이터 표현
+                chartSpline.Series.Clear();
+                chartSpline.Palette = ChartColorPalette.BrightPastel;
+
                 Series seriesSpl_1GKE = new Series("Google Kubernetes Engine")
                 {
                     ChartType = SeriesChartType.Spline,
                     MarkerStyle = MarkerStyle.Circle,
-                    BorderWidth = 3,
+                    BorderWidth = 4,
+                    MarkerSize = 5,
                 };
                 Series seriesSpl_2BQ = new Series("Google BigQuery API")
                 {
                     ChartType = SeriesChartType.Spline,
                     MarkerStyle = MarkerStyle.Circle,
-                    BorderWidth = 3,
+                    BorderWidth = 4,
+                    MarkerSize = 5,
                 };
                 Series seriesSpl_3BQS = new Series("Google BigQuery Streaming API")
                 {
                     ChartType = SeriesChartType.Spline,
                     MarkerStyle = MarkerStyle.Circle,
-                    BorderWidth = 3,
+                    BorderWidth = 4,
+                    MarkerSize = 5,
                 };
                 Series seriesSpl_4GAE = new Series("Google App Engine")
                 {
                     ChartType = SeriesChartType.Spline,
                     MarkerStyle = MarkerStyle.Circle,
-                    BorderWidth = 3,
+                    BorderWidth = 4,
+                    MarkerSize = 5,
                 };
                 Series seriesSpl_5IAM = new Series("Google Iam - admin Service Accounts")
                 {
                     ChartType = SeriesChartType.Spline,
                     MarkerStyle = MarkerStyle.Circle,
-                    BorderWidth = 3,
+                    BorderWidth = 4,
+                    MarkerSize = 5,
                 };
                 Series seriesSpl_6GWS = new Series("Google Workspace")
                 {
                     ChartType = SeriesChartType.Spline,
                     MarkerStyle = MarkerStyle.Circle,
-                    BorderWidth = 3,
+                    BorderWidth = 4,
+                    MarkerSize = 5,
                 };
 
                 // Series 데이터 설정
@@ -270,9 +299,16 @@ namespace FormApp1
                 chartSpline.Series.Add(seriesSpl_5IAM);
                 chartSpline.Series.Add(seriesSpl_6GWS);
 
-                chartSpline.ChartAreas[0].AxisY.LabelStyle.Format = "#,##0";
+                //chartSpline.ChartAreas[0].AxisY.LabelStyle.Format = "#,##0";
+                chartSpline.ChartAreas[0].AxisY.LabelStyle.Format = "#,##0,,\" Million\""; // Million = 백만 (1,000,000)
+
+                chartSpline.ChartAreas[0].AxisX.Interval = 5;
+                chartSpline.ChartAreas[0].AxisX.LineDashStyle = ChartDashStyle.Dash;
+                chartSpline.ChartAreas[0].AxisX.LineColor = Color.FromArgb(128, 90, 90, 90);
 
                 chartSpline.Legends.Clear();
+
+                chartSpline.Palette = ChartColorPalette.BrightPastel;
 
                 //foreach (var legend in chartStackedColumn.Legends)
                 //    legend.Font = new Font("Consolas", 12);

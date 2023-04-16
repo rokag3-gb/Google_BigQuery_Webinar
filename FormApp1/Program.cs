@@ -12,7 +12,7 @@ namespace FormApp1
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
             //Application.Run(new frmTest1());
-            Application.Run(new frmReportOLAP_BigQuery());
+            Application.Run(new frmReportOLAP());
         }
     }
 }
