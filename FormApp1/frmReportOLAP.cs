@@ -28,7 +28,8 @@ namespace FormApp1
         {
             txtTotalSales.Text = "";
             txtTotalNumberOfSales.Text = "";
-            txtTopSellingProduct.Text = "";
+            //txtTopSellingProduct.Text = "";
+            lblTopSellingProduct.Text = "";
 
             chartDoughtnut.Series.Clear();
             chartDoughtnut.Series.Add(new Series("Google Cloud Service 1") { ChartType = SeriesChartType.Doughnut });
@@ -83,7 +84,7 @@ namespace FormApp1
 
                 /////////////////////////////////////////////////////////////////////////////////////////////////////
                 // Query[2] 우측상단 StackedColumn Chart에 표현할 데이터 가져오기
-                query = "select\ta.TranYearMonth\r\n\t, (\r\n\tselect\tsum(Amount)\r\n\tfrom\tds01.Deal\r\n\twhere\tcast((extract(year from TranDate) * 100 + extract(month from TranDate)) as string) = a.TranYearMonth\r\n\tand\tTranDate is not null\r\n\tand\tDealKind = '매출'\r\n\tand\tIsCancel = false\r\n\tand\tItem = 'Google Kubernetes Engine'\r\n\t) as Value1\r\n\t, (\r\n\tselect\tsum(Amount)\r\n\tfrom\tds01.Deal\r\n\twhere\tcast((extract(year from TranDate) * 100 + extract(month from TranDate)) as string) = a.TranYearMonth\r\n\tand\tTranDate is not null\r\n\tand\tDealKind = '매출'\r\n\tand\tIsCancel = false\r\n\tand\tItem = 'Google BigQuery API'\r\n\t) as Value2\r\n\t, (\r\n\tselect\tsum(Amount)\r\n\tfrom\tds01.Deal\r\n\twhere\tcast((extract(year from TranDate) * 100 + extract(month from TranDate)) as string) = a.TranYearMonth\r\n\tand\tTranDate is not null\r\n\tand\tDealKind = '매출'\r\n\tand\tIsCancel = false\r\n\tand\tItem = 'Google BigQuery Streaming API'\r\n\t) as Value3\r\n\t, (\r\n\tselect\tsum(Amount)\r\n\tfrom\tds01.Deal\r\n\twhere\tcast((extract(year from TranDate) * 100 + extract(month from TranDate)) as string) = a.TranYearMonth\r\n\tand\tTranDate is not null\r\n\tand\tDealKind = '매출'\r\n\tand\tIsCancel = false\r\n\tand\tItem = 'Google App Engine'\r\n\t) as Value4\r\n\t, (\r\n\tselect\tsum(Amount)\r\n\tfrom\tds01.Deal\r\n\twhere\tcast((extract(year from TranDate) * 100 + extract(month from TranDate)) as string) = a.TranYearMonth\r\n\tand\tTranDate is not null\r\n\tand\tDealKind = '매출'\r\n\tand\tIsCancel = false\r\n\tand\tItem = 'Google Iam-admin Service Accounts'\r\n\t) as Value5\r\n\t, (\r\n\tselect\tsum(Amount)\r\n\tfrom\tds01.Deal\r\n\twhere\tcast((extract(year from TranDate) * 100 + extract(month from TranDate)) as string) = a.TranYearMonth\r\n\tand\tTranDate is not null\r\n\tand\tDealKind = '매출'\r\n\tand\tIsCancel = false\r\n\tand\tItem = 'Google Workspace'\r\n\t) as Value6\r\n\t, case when RAND() > 0 then 1 else 0 end as rnd\r\nfrom\t(\r\n\tselect\tcast((extract(year from TranDate) * 100 + extract(month from TranDate)) as string) as TranYearMonth\r\n\tfrom\tds01.Deal\r\n\twhere\tTranDate between '2023-01-01' and '2023-03-31'\r\n\tand\tDealKind = '매출'\r\n\tand\tIsCancel = false\r\n\tgroup by cast((extract(year from TranDate) * 100 + extract(month from TranDate)) as string)\r\n\t) a\r\norder by 1;";
+                query = "select\ta.TranYearMonth\r\n\t, (\r\n\tselect\tsum(Amount)\r\n\tfrom\tds01.Deal\r\n\twhere\tcast((extract(year from TranDate) * 100 + extract(month from TranDate)) as string) = a.TranYearMonth\r\n\tand\tTranDate is not null\r\n\tand\tDealKind = '매출'\r\n\tand\tIsCancel = false\r\n\tand\tItem = 'Google BigQuery API'\r\n\t\r\n\t) as Value1\r\n\t, (\r\n\tselect\tsum(Amount)\r\n\tfrom\tds01.Deal\r\n\twhere\tcast((extract(year from TranDate) * 100 + extract(month from TranDate)) as string) = a.TranYearMonth\r\n\tand\tTranDate is not null\r\n\tand\tDealKind = '매출'\r\n\tand\tIsCancel = false\r\n\tand\tItem = 'Google Kubernetes Engine'\r\n\t) as Value2\r\n\t, (\r\n\tselect\tsum(Amount)\r\n\tfrom\tds01.Deal\r\n\twhere\tcast((extract(year from TranDate) * 100 + extract(month from TranDate)) as string) = a.TranYearMonth\r\n\tand\tTranDate is not null\r\n\tand\tDealKind = '매출'\r\n\tand\tIsCancel = false\r\n\tand\tItem = 'Google BigQuery Streaming API'\r\n\t) as Value3\r\n\t, (\r\n\tselect\tsum(Amount)\r\n\tfrom\tds01.Deal\r\n\twhere\tcast((extract(year from TranDate) * 100 + extract(month from TranDate)) as string) = a.TranYearMonth\r\n\tand\tTranDate is not null\r\n\tand\tDealKind = '매출'\r\n\tand\tIsCancel = false\r\n\tand\tItem = 'Google App Engine'\r\n\t) as Value4\r\n\t, (\r\n\tselect\tsum(Amount)\r\n\tfrom\tds01.Deal\r\n\twhere\tcast((extract(year from TranDate) * 100 + extract(month from TranDate)) as string) = a.TranYearMonth\r\n\tand\tTranDate is not null\r\n\tand\tDealKind = '매출'\r\n\tand\tIsCancel = false\r\n\tand\tItem = 'Google Iam-admin Service Accounts'\r\n\t) as Value5\r\n\t, (\r\n\tselect\tsum(Amount)\r\n\tfrom\tds01.Deal\r\n\twhere\tcast((extract(year from TranDate) * 100 + extract(month from TranDate)) as string) = a.TranYearMonth\r\n\tand\tTranDate is not null\r\n\tand\tDealKind = '매출'\r\n\tand\tIsCancel = false\r\n\tand\tItem = 'Google Workspace'\r\n\t) as Value6\r\n\t, case when RAND() > 0 then 1 else 0 end as rnd\r\nfrom\t(\r\n\tselect\tcast((extract(year from TranDate) * 100 + extract(month from TranDate)) as string) as TranYearMonth\r\n\tfrom\tds01.Deal\r\n\twhere\tTranDate between '2023-01-01' and '2023-03-31'\r\n\tand\tDealKind = '매출'\r\n\tand\tIsCancel = false\r\n\tgroup by cast((extract(year from TranDate) * 100 + extract(month from TranDate)) as string)\r\n\t) a\r\norder by 1;";
 
                 response = await client.HttpRequestQueryAsync(host, query);
 
@@ -111,11 +112,11 @@ namespace FormApp1
 
                         //txtTotalSales.Text = string.Format("{0:#,##0}", decimal.Parse(dr["TotalSales"].ToString()));
                         //txtTotalNumberOfSales.Text = string.Format("{0:#,##0}", decimal.Parse(dr["TotalNumberOfSales"].ToString()));
+                        //txtTopSellingProduct.Text = dr["TopSellingProduct"].ToString();
 
                         txtTotalSales.Text = Math.Round((decimal.Parse(dr["TotalSales"].ToString()) / 1000000000), 1).ToString() + " B";
                         txtTotalNumberOfSales.Text = Math.Round(decimal.Parse(dr["TotalNumberOfSales"].ToString()) / 1000000, 1).ToString() + " M";
-
-                        txtTopSellingProduct.Text = dr["TopSellingProduct"].ToString();
+                        lblTopSellingProduct.Text = dr["TopSellingProduct"].ToString();
                     }
                 }
 
@@ -167,12 +168,12 @@ namespace FormApp1
                 chartStackedColumn.Palette = ChartColorPalette.BrightPastel;
 
                 // Series 생성
-                var series1 = new Series("Google Kubernetes Engine") { LegendText = "Google Kubernetes Engine", ChartType = SeriesChartType.StackedColumn };
-                var series2 = new Series("Google BigQuery API") { LegendText = "Google BigQuery API", ChartType = SeriesChartType.StackedColumn };
+                var series1 = new Series("Google BigQuery API") { LegendText = "Google BigQuery API", ChartType = SeriesChartType.StackedColumn };
+                var series2 = new Series("Google Kubernetes Engine") { LegendText = "Google Kubernetes Engine", ChartType = SeriesChartType.StackedColumn };
                 var series3 = new Series("Google BigQuery Streaming API") { LegendText = "Google BigQuery Streaming API", ChartType = SeriesChartType.StackedColumn };
                 var series4 = new Series("Google App Engine") { LegendText = "Google App Engine", ChartType = SeriesChartType.StackedColumn };
-                var series5 = new Series("Google Iam - admin Service Accounts") { LegendText = "Google Iam - admin Service Accounts", ChartType = SeriesChartType.StackedColumn };
-                var series6 = new Series("Google Workspace") { LegendText = "Google Workspace", ChartType = SeriesChartType.StackedColumn };
+                var series5 = new Series("Google Workspace") { LegendText = "Google Workspace", ChartType = SeriesChartType.StackedColumn };
+                var series6 = new Series("Google Iam - admin Service Accounts") { LegendText = "Google Iam - admin Service Accounts", ChartType = SeriesChartType.StackedColumn };
 
                 int _idx;
 
@@ -292,12 +293,12 @@ namespace FormApp1
                 //seriesSpl1.Points.AddXY("2023-01-04", 39);
                 //seriesSpl1.Points.AddXY("2023-01-05", 31);
 
-                chartSpline.Series.Add(seriesSpl_1GKE);
                 chartSpline.Series.Add(seriesSpl_2BQ);
+                chartSpline.Series.Add(seriesSpl_1GKE);
                 chartSpline.Series.Add(seriesSpl_3BQS);
                 chartSpline.Series.Add(seriesSpl_4GAE);
-                chartSpline.Series.Add(seriesSpl_5IAM);
                 chartSpline.Series.Add(seriesSpl_6GWS);
+                chartSpline.Series.Add(seriesSpl_5IAM);
 
                 //chartSpline.ChartAreas[0].AxisY.LabelStyle.Format = "#,##0";
                 chartSpline.ChartAreas[0].AxisY.LabelStyle.Format = "#,##0,,\" Million\""; // Million = 백만 (1,000,000)

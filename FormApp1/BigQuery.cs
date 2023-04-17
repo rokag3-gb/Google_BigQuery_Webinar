@@ -139,7 +139,7 @@ namespace FormApp1
         {
             string responseContent = string.Empty;
 
-            Debug.WriteLine("------ HttpRequestQueryAsync 시작 ------\r\n");
+            //Debug.WriteLine("------ HttpRequestQueryAsync 시작 ------\r\n");
 
             try
             {
@@ -155,7 +155,7 @@ namespace FormApp1
 
                     this.auth_token = await credential.UnderlyingCredential.GetAccessTokenForRequestAsync();
 
-                    Debug.WriteLine($"token 발급 성공 -> {this.auth_token}\r\n");
+                    Debug.WriteLine($"HttpRequestQueryAsync token 발급 성공 -> {this.auth_token}\r\n");
                 }
 
                 var httpReqMsg = new HttpRequestMessage(HttpMethod.Post, url);
@@ -173,6 +173,7 @@ namespace FormApp1
                     query = query,
                     useLegacySql = false,
                     DisableQueryCache = true,
+                    useQueryCache = false,
                 };
                 var json = JsonConvert.SerializeObject(queryBody);
                 httpReqMsg.Content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -187,11 +188,9 @@ namespace FormApp1
                 string totalBytesProcessed = jsonObject["totalBytesProcessed"].ToString();
                 string cacheHit = jsonObject["cacheHit"].ToString();
 
-                Debug.WriteLine($"totalBytesProcessed = {totalBytesProcessed}, cacheHit = {cacheHit}");
+                Debug.WriteLine($"HttpRequestQueryAsync Result: response length = {responseContent.Length}, BigQuery totalBytesProcessed = {totalBytesProcessed}, BigQuery cacheHit = {cacheHit}");
 
-                //DataTable dt = ParseToDataTable(responseContent);
-
-                Debug.WriteLine("------ HttpRequestQueryAsync 완료 ------\r\n");
+                //Debug.WriteLine("------ HttpRequestQueryAsync 완료 ------\r\n");
             }
             catch (Exception ex)
             {

@@ -28,18 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series7 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend5 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series8 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series9 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend6 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series10 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series11 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series12 = new System.Windows.Forms.DataVisualization.Charting.Series();
             tableLayoutPanel1 = new TableLayoutPanel();
             groupBox1 = new GroupBox();
             btnTestForm = new Button();
@@ -56,6 +56,7 @@
             tableLayoutPanel2 = new TableLayoutPanel();
             panel7 = new Panel();
             panel5 = new Panel();
+            lblTopSellingProduct = new Label();
             txtTopSellingProduct = new TextBox();
             label5 = new Label();
             panel4 = new Panel();
@@ -251,8 +252,8 @@
             tableLayoutPanel2.ColumnCount = 4;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 23.3861828F));
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25.4246883F));
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 35.7304649F));
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15.4586639F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 38.6749725F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.6274061F));
             tableLayoutPanel2.Controls.Add(panel7, 3, 0);
             tableLayoutPanel2.Controls.Add(panel5, 2, 0);
             tableLayoutPanel2.Controls.Add(panel4, 1, 0);
@@ -269,33 +270,46 @@
             // 
             panel7.BackColor = Color.White;
             panel7.Dock = DockStyle.Fill;
-            panel7.Location = new Point(1496, 3);
+            panel7.Location = new Point(1545, 3);
             panel7.Name = "panel7";
-            panel7.Size = new Size(267, 178);
+            panel7.Size = new Size(218, 178);
             panel7.TabIndex = 7;
             // 
             // panel5
             // 
             panel5.BackColor = Color.White;
+            panel5.Controls.Add(lblTopSellingProduct);
             panel5.Controls.Add(txtTopSellingProduct);
             panel5.Controls.Add(label5);
             panel5.Dock = DockStyle.Fill;
-            panel5.Location = new Point(865, 3);
+            panel5.Location = new Point(863, 3);
             panel5.Name = "panel5";
-            panel5.Size = new Size(625, 178);
+            panel5.Size = new Size(676, 178);
             panel5.TabIndex = 6;
+            // 
+            // lblTopSellingProduct
+            // 
+            lblTopSellingProduct.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            lblTopSellingProduct.AutoSize = true;
+            lblTopSellingProduct.Font = new Font("Cascadia Code", 31.8000011F, FontStyle.Bold, GraphicsUnit.Point);
+            lblTopSellingProduct.Location = new Point(16, 83);
+            lblTopSellingProduct.Name = "lblTopSellingProduct";
+            lblTopSellingProduct.Size = new Size(638, 72);
+            lblTopSellingProduct.TabIndex = 4;
+            lblTopSellingProduct.Text = "Google BigQuery API";
+            lblTopSellingProduct.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // txtTopSellingProduct
             // 
-            txtTopSellingProduct.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             txtTopSellingProduct.BorderStyle = BorderStyle.None;
             txtTopSellingProduct.Font = new Font("Cascadia Code", 22.2F, FontStyle.Bold, GraphicsUnit.Point);
-            txtTopSellingProduct.Location = new Point(24, 102);
+            txtTopSellingProduct.Location = new Point(353, 18);
             txtTopSellingProduct.Name = "txtTopSellingProduct";
-            txtTopSellingProduct.Size = new Size(584, 43);
+            txtTopSellingProduct.Size = new Size(166, 43);
             txtTopSellingProduct.TabIndex = 3;
             txtTopSellingProduct.TabStop = false;
             txtTopSellingProduct.Text = "Google Kubernetes Engine";
+            txtTopSellingProduct.Visible = false;
             // 
             // label5
             // 
@@ -314,9 +328,9 @@
             panel4.Controls.Add(txtTotalNumberOfSales);
             panel4.Controls.Add(label4);
             panel4.Dock = DockStyle.Fill;
-            panel4.Location = new Point(416, 3);
+            panel4.Location = new Point(415, 3);
             panel4.Name = "panel4";
-            panel4.Size = new Size(443, 178);
+            panel4.Size = new Size(442, 178);
             panel4.TabIndex = 5;
             // 
             // label8
@@ -332,11 +346,13 @@
             // txtTotalNumberOfSales
             // 
             txtTotalNumberOfSales.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtTotalNumberOfSales.BackColor = Color.White;
             txtTotalNumberOfSales.BorderStyle = BorderStyle.None;
             txtTotalNumberOfSales.Font = new Font("Cascadia Code", 48F, FontStyle.Bold, GraphicsUnit.Point);
             txtTotalNumberOfSales.Location = new Point(18, 69);
             txtTotalNumberOfSales.Name = "txtTotalNumberOfSales";
-            txtTotalNumberOfSales.Size = new Size(405, 93);
+            txtTotalNumberOfSales.ReadOnly = true;
+            txtTotalNumberOfSales.Size = new Size(404, 93);
             txtTotalNumberOfSales.TabIndex = 3;
             txtTotalNumberOfSales.TabStop = false;
             txtTotalNumberOfSales.Text = "600.1 M";
@@ -361,7 +377,7 @@
             panel3.Dock = DockStyle.Fill;
             panel3.Location = new Point(3, 3);
             panel3.Name = "panel3";
-            panel3.Size = new Size(407, 178);
+            panel3.Size = new Size(406, 178);
             panel3.TabIndex = 4;
             // 
             // label7
@@ -377,11 +393,13 @@
             // txtTotalSales
             // 
             txtTotalSales.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtTotalSales.BackColor = Color.White;
             txtTotalSales.BorderStyle = BorderStyle.None;
             txtTotalSales.Font = new Font("Cascadia Code", 48F, FontStyle.Bold, GraphicsUnit.Point);
             txtTotalSales.Location = new Point(18, 69);
             txtTotalSales.Name = "txtTotalSales";
-            txtTotalSales.Size = new Size(367, 93);
+            txtTotalSales.ReadOnly = true;
+            txtTotalSales.Size = new Size(366, 93);
             txtTotalSales.TabIndex = 3;
             txtTotalSales.TabStop = false;
             txtTotalSales.Text = "9.9 B";
@@ -414,20 +432,20 @@
             // 
             // chartDoughtnut
             // 
-            chartArea1.Name = "ChartArea1";
-            chartDoughtnut.ChartAreas.Add(chartArea1);
+            chartArea4.Name = "ChartArea1";
+            chartDoughtnut.ChartAreas.Add(chartArea4);
             chartDoughtnut.Dock = DockStyle.Fill;
-            legend1.Name = "Legend1";
-            chartDoughtnut.Legends.Add(legend1);
+            legend4.Name = "Legend1";
+            chartDoughtnut.Legends.Add(legend4);
             chartDoughtnut.Location = new Point(3, 3);
             chartDoughtnut.Name = "chartDoughtnut";
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Doughnut;
-            series1.CustomProperties = "DoughnutRadius=50, PieStartAngle=270";
-            series1.IsValueShownAsLabel = true;
-            series1.Legend = "Legend1";
-            series1.Name = "Google Cloud Services";
-            chartDoughtnut.Series.Add(series1);
+            series7.ChartArea = "ChartArea1";
+            series7.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Doughnut;
+            series7.CustomProperties = "PieStartAngle=270, DoughnutRadius=50";
+            series7.IsValueShownAsLabel = true;
+            series7.Legend = "Legend1";
+            series7.Name = "Google Cloud Services";
+            chartDoughtnut.Series.Add(series7);
             chartDoughtnut.Size = new Size(662, 651);
             chartDoughtnut.TabIndex = 0;
             chartDoughtnut.TabStop = false;
@@ -451,29 +469,29 @@
             // 
             // chartSpline
             // 
-            chartArea2.Name = "ChartArea1";
-            chartSpline.ChartAreas.Add(chartArea2);
+            chartArea5.Name = "ChartArea1";
+            chartSpline.ChartAreas.Add(chartArea5);
             chartSpline.Dock = DockStyle.Fill;
-            legend2.Name = "Legend1";
-            chartSpline.Legends.Add(legend2);
+            legend5.Name = "Legend1";
+            chartSpline.Legends.Add(legend5);
             chartSpline.Location = new Point(3, 376);
             chartSpline.Name = "chartSpline";
-            series2.BorderWidth = 4;
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series2.LabelBorderWidth = 6;
-            series2.Legend = "Legend1";
-            series2.MarkerBorderWidth = 5;
-            series2.MarkerStyle = System.Windows.Forms.DataVisualization.Charting.MarkerStyle.Circle;
-            series2.Name = "Google Cloud Services 1";
-            series3.BorderWidth = 3;
-            series3.ChartArea = "ChartArea1";
-            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series3.Legend = "Legend1";
-            series3.MarkerStyle = System.Windows.Forms.DataVisualization.Charting.MarkerStyle.Circle;
-            series3.Name = "Google Cloud Services 2";
-            chartSpline.Series.Add(series2);
-            chartSpline.Series.Add(series3);
+            series8.BorderWidth = 4;
+            series8.ChartArea = "ChartArea1";
+            series8.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series8.LabelBorderWidth = 6;
+            series8.Legend = "Legend1";
+            series8.MarkerBorderWidth = 5;
+            series8.MarkerStyle = System.Windows.Forms.DataVisualization.Charting.MarkerStyle.Circle;
+            series8.Name = "Google Cloud Services 1";
+            series9.BorderWidth = 3;
+            series9.ChartArea = "ChartArea1";
+            series9.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series9.Legend = "Legend1";
+            series9.MarkerStyle = System.Windows.Forms.DataVisualization.Charting.MarkerStyle.Circle;
+            series9.Name = "Google Cloud Services 2";
+            chartSpline.Series.Add(series8);
+            chartSpline.Series.Add(series9);
             chartSpline.Size = new Size(1092, 278);
             chartSpline.TabIndex = 2;
             chartSpline.TabStop = false;
@@ -481,32 +499,32 @@
             // 
             // chartStackedColumn
             // 
-            chartArea3.Name = "ChartArea1";
-            chartStackedColumn.ChartAreas.Add(chartArea3);
+            chartArea6.Name = "ChartArea1";
+            chartStackedColumn.ChartAreas.Add(chartArea6);
             chartStackedColumn.Dock = DockStyle.Fill;
-            legend3.Name = "Legend1";
-            chartStackedColumn.Legends.Add(legend3);
+            legend6.Name = "Legend1";
+            chartStackedColumn.Legends.Add(legend6);
             chartStackedColumn.Location = new Point(3, 3);
             chartStackedColumn.Name = "chartStackedColumn";
-            series4.ChartArea = "ChartArea1";
-            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StackedColumn;
-            series4.Legend = "Legend1";
-            series4.Name = "Google Cloud Services 1";
-            series5.ChartArea = "ChartArea1";
-            series5.Legend = "Legend1";
-            series5.Name = "Google Cloud Services 2";
-            series6.ChartArea = "ChartArea1";
-            series6.Legend = "Legend1";
-            series6.Name = "Google Cloud Services 3";
-            chartStackedColumn.Series.Add(series4);
-            chartStackedColumn.Series.Add(series5);
-            chartStackedColumn.Series.Add(series6);
+            series10.ChartArea = "ChartArea1";
+            series10.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StackedColumn;
+            series10.Legend = "Legend1";
+            series10.Name = "Google Cloud Services 1";
+            series11.ChartArea = "ChartArea1";
+            series11.Legend = "Legend1";
+            series11.Name = "Google Cloud Services 2";
+            series12.ChartArea = "ChartArea1";
+            series12.Legend = "Legend1";
+            series12.Name = "Google Cloud Services 3";
+            chartStackedColumn.Series.Add(series10);
+            chartStackedColumn.Series.Add(series11);
+            chartStackedColumn.Series.Add(series12);
             chartStackedColumn.Size = new Size(1092, 367);
             chartStackedColumn.TabIndex = 1;
             chartStackedColumn.TabStop = false;
             chartStackedColumn.Text = "chart1";
             // 
-            // frmReportOLAP_BigQuery
+            // frmReportOLAP
             // 
             AutoScaleDimensions = new SizeF(13F, 30F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -514,7 +532,7 @@
             Controls.Add(tableLayoutPanel1);
             Font = new Font("Cascadia Code", 13.8F, FontStyle.Regular, GraphicsUnit.Point);
             Margin = new Padding(4);
-            Name = "frmReportOLAP_BigQuery";
+            Name = "frmReportOLAP";
             ShowIcon = false;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "OLAP Report - BigQuery";
@@ -576,5 +594,6 @@
         private Label label8;
         private Button btnTestForm;
         private Label label7;
+        private Label lblTopSellingProduct;
     }
 }
