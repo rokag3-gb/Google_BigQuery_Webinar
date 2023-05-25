@@ -202,8 +202,10 @@ namespace FormApp1
                 chartStackedColumn.Series.Add(series1);
                 chartStackedColumn.Series.Add(series2);
                 chartStackedColumn.Series.Add(series3);
+
                 chartStackedColumn.Series.Add(series4);
                 chartStackedColumn.Series.Add(series5);
+                
                 chartStackedColumn.Series.Add(series6);
 
                 //chartStackedColumn.ChartAreas[0].AxisY.LabelStyle.Format = "#,##0";
