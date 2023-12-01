@@ -10,19 +10,6 @@ namespace FormApp1
         [STAThread]
         static void Main()
         {
-            /*
-            string key = "1";
-            key = key.Trim();
-            //class Value = null;
-
-            if (key is null || key == string.Empty)
-            {
-            }
-
-            if (typeof(this) is class)
-            {
-            }
-            */
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
